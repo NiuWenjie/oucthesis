@@ -1,52 +1,60 @@
-# 中国海洋大学硕士博士学位论文 LaTeX 模板
-[![GitHub release](https://img.shields.io/github/release/ouc-ocean-group/oucthesis/all.svg)](https://github.com/ouc-ocean-group/oucthesis/releases/latest)
-## 简介
-本项目是信息科学与工程学院 [OceanGroup VisionLab](https://og.oucvision.top) 编写的中国海洋大学的硕博士学位论文 LaTeX 模板 oucthesis，按照最新版的
-《[中国海洋大学研究生学位论文书写格式统一要求](http://grad.ouc.edu.cn/39/69/c1660a14697/page.psp)》
-的要求编写，测试兼容最新版的 Texpad (Mac)、TexStudio、Overleaf。(2020年初)
+# What's ThuThesis?
+ThuThesis is a LaTeX thesis template package for Tsinghua University supporting from bachelor, master, doctor dissertations to post-doc report. Since the users of this package are supposed to be Chinese or those understand Chinese, the following of this file and all other documents are written in Chinese only.
 
-对于硕士生，不是很建议使用，因为在作者毕业的那一年，查重归档等各个程序都要求提交Word版论文。博士的话不是很清楚。
+# ThuThesis是什么？
+ThuThesis为 <b>T</b>sing<b>h</b>ua <b>U</b>niversity <b>Thesis</b> LaTeX Template之缩写。
 
-**由于本校论文格式要求过于粗略，作者综合了之前师兄师姐的论文和官方要求，编写出此版本，请自行衡量承担使用风险。**
+此宏包旨在建立一个简单易用的清华大学学位论文LaTeX模板，包括本科综合论文训练、硕士论文、博士论文、博士哲学论文以及博士后出站报告。现在支持本科、硕士、博士论文、博士后出站报告格式，对其它格式（还有么？）的支持会陆续加入。
 
-## 下载地址
-GitHub Releases：https://github.com/ouc-ocean-group/oucthesis/releases
+# 文档
+请[下载](https://github.com/xueruini/thuthesis/releases)模板，里面包括具体使用说明以及示例文档：
 
-详细使用方法请见 `main.tex`
+* 模板使用说明 (thuthesis.pdf)
+* 示例文档 (main.pdf)
 
-## 字数统计
-本模版使用 `texcount` 进行字数统计。请保证 tex 文件名为 `main.tex`。在编译选项加上：
+# 下载
 
+* 发行版：[CTAN](http://www.ctan.org/pkg/thuthesis)
+* 开发版：[GitHub](https://github.com/xueruini/thuthesis)
+
+# 升级
+## 自动更新
+通过TeX发行版工具自动从[CTAN](http://www.ctan.org/pkg/thuthesis)更新。
+
+## 手动更新
+从 [GitHub](https://github.com/xueruini/thuthesis)下载放入论文目录，执行命令（Windows 用户在文件夹空白处按`Shift+鼠标右键`，点击“在此处打开命令行窗口”）：
+
+    latex thuthesis.ins
+
+即可得到 `thuthesis.cls` 和 `thuthesis.cfg` 等模板文件。
+
+# 提问
+按推荐顺序排序：
+
+* 先到 [FAQ](https://github.com/xueruini/thuthesis/wiki/FAQ) 看看常见问题
+* [Github Issues](http://github.com/xueruini/thuthesis/issues)
+* [TeX@newsmth](http://www.newsmth.net/nForum/#!board/TeX)
+* [ThuThesis@Google Groups](http://groups.google.com/group/thuthesis)
+
+# Makefile的用法
+
+```shell
+make [{all|thesis|shuji|doc|clean|cleanall|distclean}] \
+     [METHOD={latexmk|xelatex|pdflatex}]
 ```
---shell-escape
-```
-比如 TexStudio 设置中需要填写：
 
-```
-xelatex.exe -synctex=1 -interaction=nonstopmode --shell-escape %.tex
-```
+## 目标
+* `make all`       等于 `make thesis && make shuji && make doc`；
+* `make cls`       生成模板文件；
+* `make thesis`    生成论文 main.pdf；
+* `make shuji`     生成书脊 shuji.pdf；
+* `make doc`       生成使用说明书 thuthesis.pdf；
+* `make clean`     删除示例文件的中间文件（不含 main.pdf）；
+* `make cleanall`  删除示例文件的中间文件和 main.pdf；
+* `make distclean` 删除示例文件和模板的所有中间文件和 PDF。
 
-Windows 用户如想使用字数统计，请先到 [http://strawberryperl.com/](http://strawberryperl.com/) 安装 Perl。
-
-## 遇到可能的问题
-
-如果发现模板有问题，请按照以下步骤操作：
-
-1. 阅读学校的标准，判断是否符合学校的要求；
-2. 将 TeX 发行版和宏包升级到最新，并且将模板升级到 Github 上最新版本，查看问题是否已经修复；
-3. 在 [GitHub Issues](https://github.com/ouc-ocean-group/oucthesis/issues)
-中搜索该问题的关键词；
-5. 在 [GitHub Issues](https://github.com/ouc-ocean-group/oucthesis/issues)
-中提出新 issue，并回答以下问题：
-    - 使用了什么版本的软件？
-    - 具体的问题是什么？
-    - 正确的结果应该是什么样的？
-    - 是否应该附上相关源码或者截图？
-
-如果导师或者院系在格式上有额外的要求，请将老师的邮件转发给模板作者。
-作者会考虑增加接口以便修改格式。
-
-
-## 鸣谢
-
-感谢 [@USTCthesis](https://github.com/ustctug/ustcthesis), [@THUthesis](https://github.com/xueruini/thuthesis) 提供的诸多参考！
+## 参数
+* **METHOD**：指定生成 pdf 的方式，缺省采用 latexmk。
+  * METHOD=latexmk  表示使用 latexmk 的方式生成 pdf（使用 xelatex）。
+  * METHOD=xelatex  表示使用 xelatex 引擎编译生成 pdf；
+  * METHOD=pdflatex 表示使用 pdflatex 引擎编译生成 pdf。
