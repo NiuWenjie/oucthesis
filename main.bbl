@@ -1,0 +1,216 @@
+\begin{thebibliography}{10}
+
+\bibitem{goodfellow2014generative}
+Goodfellow I, Pouget-Abadie J, Mirza M, et~al.
+\newblock Generative adversarial nets.
+\newblock  Advances in neural information processing systems, 2014.
+\newblock  2672--2680
+\thudot
+
+\bibitem{kingma2013auto}
+Kingma D~P, Welling M.
+\newblock Auto-encoding variational bayes.
+\newblock arXiv preprint arXiv:1312.6114, 2013.
+\thudot
+
+\bibitem{isola2017image}
+Isola P, Zhu J~Y, Zhou T, et~al.
+\newblock Image-to-image translation with conditional adversarial networks.
+\newblock  Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2017.
+\newblock  1125--1134
+\thudot
+
+\bibitem{zhu2017unpaired}
+Zhu J~Y, Park T, Isola P, et~al.
+\newblock Unpaired image-to-image translation using cycle-consistent
+  adversarial networks.
+\newblock  Proceedings of the IEEE international conference on computer vision,
+  2017.
+\newblock  2223--2232
+\thudot
+
+\bibitem{liu2017unsupervised}
+Liu M~Y, Breuel T, Kautz J.
+\newblock Unsupervised image-to-image translation networks.
+\newblock Advances in neural information processing systems, 2017, 30:700--708
+\thudot
+
+\bibitem{huang2018multimodal}
+Huang X, Liu M~Y, Belongie S, et~al.
+\newblock Multimodal unsupervised image-to-image translation.
+\newblock  Proceedings of the European Conference on Computer Vision (ECCV),
+  2018.
+\newblock  172--189
+\thudot
+
+\bibitem{lee2018diverse}
+Lee H~Y, Tseng H~Y, Huang J~B, et~al.
+\newblock Diverse image-to-image translation via disentangled representations.
+\newblock  Proceedings of the European conference on computer vision (ECCV),
+  2018.
+\newblock  35--51
+\thudot
+
+\bibitem{choi2018stargan}
+Choi Y, Choi M, Kim M, et~al.
+\newblock Stargan: Unified generative adversarial networks for multi-domain
+  image-to-image translation.
+\newblock  Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2018.
+\newblock  8789--8797
+\thudot
+
+\bibitem{choi2020stargan}
+Choi Y, Uh Y, Yoo J, et~al.
+\newblock Stargan v2: Diverse image synthesis for multiple domains.
+\newblock  Proceedings of the IEEE/CVF Conference on Computer Vision and
+  Pattern Recognition, 2020.
+\newblock  8188--8197
+\thudot
+
+\bibitem{lee2020drit++}
+Lee H~Y, Tseng H~Y, Mao Q, et~al.
+\newblock Drit++: Diverse image-to-image translation via disentangled
+  representations.
+\newblock International Journal of Computer Vision, 2020. 1--16
+\thudot
+
+\bibitem{mirza2014conditional}
+Mirza M, Osindero S.
+\newblock Conditional generative adversarial nets.
+\newblock arXiv preprint arXiv:1411.1784, 2014.
+\thudot
+
+\bibitem{krizhevsky2017imagenet}
+Krizhevsky A, Sutskever I, Hinton G~E.
+\newblock Imagenet classification with deep convolutional neural networks.
+\newblock Communications of the ACM, 2017, 60(6):84--90
+\thudot
+
+\bibitem{deng2009imagenet}
+Deng J, Dong W, Socher R, et~al.
+\newblock Imagenet: A large-scale hierarchical image database.
+\newblock  2009 IEEE conference on computer vision and pattern recognition.
+  Ieee, 2009.
+\newblock  248--255
+\thudot
+
+\bibitem{radford2015unsupervised}
+Radford A, Metz L, Chintala S.
+\newblock Unsupervised representation learning with deep convolutional
+  generative adversarial networks.
+\newblock arXiv preprint arXiv:1511.06434, 2015.
+\thudot
+
+\bibitem{mao2017least}
+Mao X, Li Q, Xie H, et~al.
+\newblock Least squares generative adversarial networks.
+\newblock  Proceedings of the IEEE international conference on computer vision,
+  2017.
+\newblock  2794--2802
+\thudot
+
+\bibitem{odena2017conditional}
+Odena A, Olah C, Shlens J.
+\newblock Conditional image synthesis with auxiliary classifier gans.
+\newblock  International conference on machine learning. PMLR, 2017.
+\newblock  2642--2651
+\thudot
+
+\bibitem{ronneberger2015u}
+Ronneberger O, Fischer P, Brox T.
+\newblock U-net: Convolutional networks for biomedical image segmentation.
+\newblock  International Conference on Medical image computing and
+  computer-assisted intervention. Springer, 2015.
+\newblock  234--241
+\thudot
+
+\bibitem{huang2017arbitrary}
+Huang X, Belongie S.
+\newblock Arbitrary style transfer in real-time with adaptive instance
+  normalization.
+\newblock  Proceedings of the IEEE International Conference on Computer Vision,
+  2017.
+\newblock  1501--1510
+\thudot
+
+\bibitem{wang2018high}
+Wang T~C, Liu M~Y, Zhu J~Y, et~al.
+\newblock High-resolution image synthesis and semantic manipulation with
+  conditional gans.
+\newblock  Proceedings of the IEEE conference on computer vision and pattern
+  recognition, 2018.
+\newblock  8798--8807
+\thudot
+
+\bibitem{anwar2018deep}
+Anwar S, Li C, Porikli F.
+\newblock Deep underwater image enhancement.
+\newblock arXiv preprint arXiv:1807.03528, 2018.
+\thudot
+
+\bibitem{liu2019real}
+Liu R, Fan X, Zhu M, et~al.
+\newblock Real-world underwater enhancement: challenges, benchmarks, and
+  solutions.
+\newblock arXiv preprint arXiv:1901.05320, 2019.
+\thudot
+
+\bibitem{fabbri2018enhancing}
+Fabbri C, Islam M~J, Sattar J.
+\newblock Enhancing underwater imagery using generative adversarial networks.
+\newblock  2018 IEEE International Conference on Robotics and Automation
+  (ICRA). IEEE, 2018.
+\newblock  7159--7165
+\thudot
+
+\bibitem{yang2015underwater}
+Yang M, Sowmya A.
+\newblock An underwater color image quality evaluation metric.
+\newblock IEEE Transactions on Image Processing, 2015, 24(12):6062--6071
+\thudot
+
+\bibitem{panetta2015human}
+Panetta K, Gao C, Agaian S.
+\newblock Human-visual-system-inspired underwater image quality measures.
+\newblock IEEE Journal of Oceanic Engineering, 2015, 41(3):541--551
+\thudot
+
+\bibitem{Silberman:ECCV12}
+Nathan~Silberman P~K, Fergus R.
+\newblock Indoor segmentation and support inference from rgbd images.
+\newblock  ECCV, 2012
+\thudot
+
+\bibitem{li2017watergan}
+Li J, Skinner K~A, Eustice R~M, et~al.
+\newblock Watergan: Unsupervised generative network to enable real-time color
+  correction of monocular underwater images.
+\newblock IEEE Robotics and Automation letters, 2017, 3(1):387--394
+\thudot
+
+\bibitem{wang2019uwgan}
+Wang N, Zhou Y, Han F, et~al.
+\newblock Uwgan: Underwater gan for real-world underwater color restoration and
+  dehazing.
+\newblock arXiv preprint arXiv:1912.10269, 2019.
+\thudot
+
+\bibitem{yu2018underwater}
+Yu X, Qu Y, Hong M.
+\newblock Underwater-gan: Underwater image restoration via conditional
+  generative adversarial network.
+\newblock  International Conference on Pattern Recognition. Springer, 2018.
+\newblock  66--75
+\thudot
+
+\bibitem{uplavikar2019all}
+Uplavikar P~M, Wu Z, Wang Z.
+\newblock All-in-one underwater image enhancement using domain-adversarial
+  learning.
+\newblock  CVPR Workshops, 2019.
+\newblock  1--8
+\thudot
+
+\end{thebibliography}
