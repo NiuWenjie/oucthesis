@@ -1,5 +1,56 @@
-\chapter{水下图像多模态转译的实验与分析评测}
-本章将针对水下图像多模态转译问题设计实验、确定评价指标，验证我们设计的网络模块的有效性，并域其他方法进行对比和分析。
+\chapter{水下图像多模态转译模型设计}
+本章主要介绍水下图像多模态转译问题以及相应的改进算法。
 
-首先，
-\section{experiment}
+\section{水下图像多模态转译问题定义}
+
+
+
+\section{水下图像多模态转译问题分析}
+
+
+基于上述几章的分析，我们了解到水下图像合成的方法，一种是基于水下光学物理模型将给定图像合成水下场景图像，另一种是利用CycleGAN这种无监督图像转译模型，实现图像从当前场景到水下场景的转译。
+
+这些问题给水下图像转译问题带来巨大的困难。将有限的给定输入图像，转译成多种水下环境条件的图像结果就显得尤为重要。我们将这种给定图像转译到多种水下环境的图像转译称作水下图像多模态转译。基于生成对抗网络，我们的网络结构可以在无监督条件下，实现水下图像的多模态转译
+
+定义、选择的baselines与问题之间的关系
+\section{建立模型算法和损失函数}
+\subsection{模型创新点}
+\subsection{目标函数和算法}
+\subsection{网络结构}
+% \section{实验与分析}
+% \subsection{数据集设置与实验环境}
+% \subsection{评价指标}
+% \subsection{消融实验}
+% \subsection{与先进方法对比}
+
+\begin{table}[htb]
+  \centering\small
+  \caption{RUIE数据集上多模态转译定量结果对比}
+  \label{tab:ruie_metric}
+  \begin{tabular}{l|cccc}
+    \toprule
+    Metrics & CycleGAN & MUNIT & DRIT & Ours               \\
+    \midrule
+    FID$\uparrow$     & 243.4 & 139.4 & 179.2 & 0 \\ %textbf加粗
+    LPIPS$\downarrow$ & 0.634 & 0.452 & 0.575 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[htb]
+  \centering\small
+  
+  \caption{UWCNN数据集上多模态转译定量结果对比}
+  \label{tab:uwcnn_metric}
+  \begin{tabular}{l|cccc}
+    \toprule
+    Metrics & CycleGAN & MUNIT & DRIT & Ours               \\
+    \midrule
+    FID$\uparrow$     & 80.7  & 232.1 & 290.7 & 0 \\ %textbf加粗
+    LPIPS$\downarrow$ & 0.490 & 0.647 & 0.668 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\section{本章小结}
