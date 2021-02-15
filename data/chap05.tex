@@ -1,5 +1,52 @@
-\chapter{水下图像多模态转译的实验与分析评测}
-本章将针对水下图像多模态转译问题设计实验、确定评价指标，验证我们设计的网络模块的有效性，并域其他方法进行对比和分析。
+\chapter{水下图像合成实验与分析评测}
+本章将针对水下图像多模态转译问题设计实验、确定评价指标，验证我们设计的网络模块的有效性，并与基准方法进行对比和分析。
 
-首先，
-\section{experiment}
+\section{水下图像多模态合成实验设计}
+\subsection{实验设置}
+基准方法我们总共选取了五种，其中两种经典的图像转译方法CycleGAN~\citep{zhu2017unpaired}和基于分解表示的跨域多模态转译方法MUNIT~\citep{huang2018multimodal}，三种最新的图像多模态转译方法DRIT++~\citep{lee2020drit++}、DSMAP~\citep{chang2020domain}和StarGAN v2~\cite{choi2020stargan}。除了不可或缺的经典模型CycleGAN，剩余四种方法都可以完成两个域之间的多模态转译任务。
+
+CycleGAN学习两个域之间的一对一映射，通过循环一致性损失能够很好的学习到目标域的特征；MUNIT, DRIT++ and DSMAP将图像分解为共享的内容空间和不同域的特征空间，然后通过给生成器共享的内容和目标域的特征合成目标域风格相同内容信息的结果；StarGAN v2生成器结构
+
+CycleGAN learns one-to-one mapping between two domains, MUNIT, DRIT++ and DSMAP decompose images into a shared content space and different attribute spaces for different domains. All the baselines are trained using the implementations provided by the authors. 
+
+\subsection{数据集设置}
+
+\subsection{评价准则}
+
+\section{水下图像多模态合成结果分析}
+\subsection{定性结果分析}
+
+\subsection{定量结果分析}
+
+\begin{table*}[ht]
+\centering
+\caption{Quantitative comparison on RUIE, UWCNN and UVB 2017 datasets.}
+\begin{tabular}{|p{2cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|p{1.8cm}|}
+\hline
+\multirow{2}{*}{Methods} & \multicolumn{2}{c|}{RUIE} & \multicolumn{2}{c|}{UWCNN} & \multicolumn{2}{c|}{UVB 2017} \\ \cline{2-7} 
+                         & FID           & LPIPS       & FID           & LPIPS          & FID            & LPIPS          \\ \hline \hline
+CycleGAN                 & 243.4         & 0.634       & \textbf{80.7} & 0.490          & \textbf{145.1} & 0.358          \\ \hline
+MUNIT                    & 139.4         & 0.452       & 232.1         & 0.647          & 240.4          & 0.486          \\ \hline
+DRIT++                   & 179.2         & 0.575       & 290.7         & 0.668          & 243.7          & 0.474          \\ \hline
+DSMAP                    & 139.6         & 0.513       & 138.8         & 0.513          & 232.6          & 0.344          \\ \hline
+Ours                     & \textbf{83.2} & \textbf{0.579} & 129.6      & \textbf{0.732} & 172.7          & \textbf{0.493} \\ \hline
+\end{tabular}
+\label{tab:compare}
+\end{table*}
+
+\subsection{消融实验}
+
+\section{水下图像多样式域合成实验设计}
+\subsection{实验设置}
+
+\subsection{数据集设置}
+
+\subsection{评价准则}
+
+\section{水下图像多样式域合成结果分析}
+\subsection{定性结果分析}
+
+\subsection{定量结果分析}
+
+
+\subsection{消融实验}
