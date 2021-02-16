@@ -216,14 +216,14 @@ L_{L1}(G) = \mathbb{E}_{x,y,z}[\parallel y-G(x,z) \parallel_1]
 CycleGAN~\cite{zhu2017unpaired}是一种新颖的无监督循环生成结构，主要思路是训练两对生成器和判别器模型将图像从一个域转换到另一个域，过程中要求循环一致性。实质上，CycleGAN在每个方向上都是单向GAN，共享两个生成器，各自带一个判别器，总共两个生成器两个判别器。网络结构如图~\ref{fig:cyclegan}所示，假设有$X$和$Y$两个域，生成器$G$基于$X$域图像生成$Y$域图像；生成器$F$基于$Y$域图像生成$X$域图像，这两个生成器是相反的过程，通过图~\ref{fig:cyclegan}(b)(c)中的循环一致性损失进行约束。CycleGAN的两个判别器$D_X$和$D_Y$分别用来判断输入$X$和$Y$域的图像真假。因此，CycleGAN可以看作两个GAN的融合，一个GAN由生成器$G$和判别器$D_X$构成，实现从$X$到$Y$域图像的生成和判别；另一个GAN由生成器$F$和判别器$D_Y$构成，实现从$Y$域到$X$域的图像生成和判别，两个网络构成循环过程。
 
 \begin{equation}
-\label{equ:cycle}
+\label{equ:cyclegan}
 \begin{aligned}
 L_{cyc}(F,G,X,Y)= & \mathbb{E}_{x \sim p_{data}(x)}[\parallel G(F(x))-x \parallel_1]\\
 & + \mathbb{E}_{y \sim p_{data}(y)}[\parallel G(F(y))-y \parallel_1]
 \end{aligned}
 \end{equation}
 
-CycleGAN创新提出的循环一致性损失函数如~\ref{equ:cycle}所示，映射$ G(F(y)) \approx y$和$ G(F(x)) \approx x$在训练过程中学习到。也就是$X$域图片转译到$Y$域中，还能再逆转回来。生成器$G$对应方向判别器$D_X$和生成器$F$对应方向判别器$D_Y$分别可以定义一个GAN对抗损失，最终目标函数~\ref{equ:cycle_obj}由两个方向上的对抗损失加上循环一致性损失三部分组成。    
+CycleGAN创新提出的循环一致性损失函数如~\ref{equ:cyclegan}所示，映射$ G(F(y)) \approx y$和$ G(F(x)) \approx x$在训练过程中学习到。也就是$X$域图片转译到$Y$域中，还能再逆转回来。生成器$G$对应方向判别器$D_X$和生成器$F$对应方向判别器$D_Y$分别可以定义一个GAN对抗损失，最终目标函数~\ref{equ:cycle_obj}由两个方向上的对抗损失加上循环一致性损失三部分组成。    
 
 \begin{equation}
 \label{equ:cycle_obj}
