@@ -1,16 +1,43 @@
 \chapter{水下图像多模态转译模型设计}
-基于上述几章的分析，我们了解到水下图像合成的方法，一种是基于水下光学物理模型将给定图像合成水下场景图像，另一种是利用CycleGAN这种无监督图像转译模型，实现图像从当前场景到水下场景的转译。这些方法都无法一次生成多种样式的合成结果。将有限的给定输入图像，转译成多种水下环境条件的图像结果就显得尤为重要。
-
-在上一章最后一小节，我们根据问题设计了两种思路，针对设想的两种思路给出具体的定义和分析，以及具体网络设计。
+基于上述几章的分析，我们了解到水下图像合成的方法，一种是基于水下光学物理模型将给定图像合成水下场景图像，另一种是利用CycleGAN这种无监督图像转译模型，实现图像从当前场景到水下场景的转译。这些方法都无法一次生成多种样式的合成结果。将有限的给定输入图像，转译成多种水下环境条件的图像结果就显得尤为重要。在上一章最后一小节，我们根据问题设计了两种思路来解决这个问题，针对设想的两种思路给出具体的定义和分析，以及具体网络设计。
 
 \section{水下图像跨域多模态转译设计}
+我们将这种给定图像转译到多种水下环境的图像转译称作水下图像跨域多模态转译。基于生成对抗网络，我们的网络结构可以在无监督条件下，实现水下图像跨域的多模态转译。在这一节，将对该问题进行分析，提出模型设计思路，设置目标函数，为下一章节中的实验提供理论依据和实验意义。
 % 定义、选择的baselines与问题之间的关系
 
-我们将这种给定图像转译到多种水下环境的图像转译称作水下图像多模态转译。基于生成对抗网络，我们的网络结构可以在无监督条件下，实现水下图像的多模态转译
-在上一章最后一小节，我们根据问题设计了两种思路，针对设想的两种思路给出具体的定义和分析，以及具体网络设计。
-
 \subsection{问题及分析}
-\subsection{模型创新点}
+第三章中提到的水下图像合成方法，无法一次将图像转译成多模态结果，每次合成只能到一种水下环境条件的单模态。本工作对大量图像转译文献进行综述，对于其中经典和优秀的工作应用于水下图像多模态转译任务，根据得到的结果进行了细致的分析，致力于提出一种简洁有效的方法来解决水下图像多模态转译问题。
+
+在对经典和优秀的工作进行实验室，发现了一些我们设计模型时解决或者借鉴的地方。CycleGAN是经典的跨域转译任务，使用循环一致性损失成功实现了两个域之间的双向转译，唯一的问题在于无法解决多模态转译问题，加入噪声进行扰动都会被网络给忽略，只能生成一一对应的结果。MUNIT和DRIT都是经典的基于分解的跨域多模态转译模型，都是将输入图像分解到域共享的内容空间和域特有的风格/属性空间，将域共享的内容和目标域的风格/属性用来合成当前内容下目标域风格的图像。DSMAP是基于MUNIT工作，MUNIT认为内容空间分解不彻底，将共享内容空间的特征进行再映射到域特有的内容潜在空间中。DRIT++是DRIT进一步工作，主要在多模态转译上进行改进，并拓展到多域转译任务中。对于以上基于分解的转译模型，都在当前任务中进行了实验，对于水下比较复杂的场景，当前方法都无法成功解决，在内容或者风格上或多或少都有解决不了的问题。StarGAN v2在StarGAN多域转译模型的基础上拓展到多模态转译问题上，通过条件编码控制合成特定域。在水下环境中，StarGAN v2解决多模态问题对数据集要求比较严格，当目标域内模态间样式差距较大的时StarGAN v2无法成功将内容保存完整。
+
+受到分解表达学习的跨域转译方法的启发，本工作设计出一个简洁的水下图像多模态转译模型MUGAN。针对以上方法在水下环境的多模态任务中存在问题进行解决，主要是保证转译过程中目标内容保持不变，水下环境条件影响的风格能有多种样式。在不需要配对数据的条件下，给定两个域的图像，可以实现到目标域的多模态转译任务，不受数据成对的限制，对于基于视觉的水下任务有重要的研究意义。本工作中提出的水下图像多模态转译模型MUGAN直接将给出的输入图像转译成多模态的水下结果，不需要依赖于传输图或者深度图等额外的水下条件信息。另外，基于分解表达学习和添加至关重要的内容一致性限制，我们的MUGAN可以轻松地保持内容信息恒定且完整。另外，我们的工作可以实现多模态转译的两种情况。一是采样目标域风格编码注入到转译模型中，可以合成多种模态的目标域结果；另一种是给定目标域参考，通过风格编码器将参考编码成风格向量注入到转译模型，可以合成当前参考风格条件下的结果。
+
+\subsection{模型结构}
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/G.pdf}
+    \caption{水下图像多模态转译模型MUGAN转译器网络结构。}
+    \label{fig:mugan_g}
+\end{figure*}
+
+我们设置图像集$A$和$B$分别为空中域和多模态水下域。输入不配对的图像$x_A \in A$和$x_B \in B$，我们的目标是训练一个网络结构使得网络结果能够学会生成目标域$B$的多模态结果，且多模态结果对应于输入图像$A$的内容。多样的域风格向量可以来自目标域分布的随机采样也可以来自给定图像编码。
+
+图~\ref{fig:mugan_g}和图~\ref{fig:mugan_d}所示为水下图像多模态转译模型MUGAN网络结构。MUGAN网络结构基于分解表达学习，图~\ref{fig:mugan_g}是转译模型结构，图~\ref{fig:mugan_d}是判别结构。转译模型包括编码器和生成器，生成器结构有两个分支，上分支整体来看是一个编码器-解码器结构，下分支整体是一个类似CycleGAN的循环网络，目的是训练模型实现跨域转译。
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/D.pdf}
+    \caption{水下图像多模态转译模型MUGAN判别器网络结构。}
+    \label{fig:mugan_d}
+\end{figure*}
+
+\textbf{编码器。}编码器包括两个，一个是内容编码器，一个是风格编码器。给一张来自空中域的图像$x_A$或者水下多模态域的图像$x_B$，风格编码器$E_S$提取给定图像的风格编码$s_A$或者$s_B$，其中$s_A = E_S(x_A)$，$s_B = E_S(x_B)$。内容编码器$E_C$将图像编码至内容空间$C$中。如图~\ref{fig:mugan_g}所示，内容编码器$E_C$将$x_A$编码成内容向量$c$，来自$\hat{x_B}$的向量$\hat{c}$理论上跟来自$x_A$的向量$c$是一致的，只是域风格信息不一致。$E_S$是一个MLP映射网络，$E_C$是一个包括三个卷集模块和四个残差模块的网络。
+
+\textbf{生成器结构。}我们的生成器$G_A(\cdot)$和$G_B(\cdot)$将输入的内容和风格转译到目标域，目标域具有的特定风格特征信息可以来自目标域特定分布的采样$z_A$和$z_B$或者风格编码器提取的风格编码$E_S(\cdot)$。我们生成器包挎四个残差模块和两个上采样模块。我们对上采样模块和残差模块分别使用实例归一化（IN）和自适应实例归一化（AdaIN）~\cite{huang2017arbitrary}。风格信息通过全部AdaIN层注入，通过学习仿射变换进行缩放和移动向量。
+
+\textbf{判别器结构。}判别器$D_A$和$D_B$都是PatchGAN~\cite{isola2017image}网络。判别器$D_A$用来判断输入图像$x$是来自$A$域的真实样本还是$A$域生成器$G_A$的生成结果$G_A(c,s_A)$，相应地判别器$D_B$是用来判断输入图像$x$是来自$B$域的真实样本还是$B$域生成器$G_B$的生成结果$G_B(\tilde{c},z_B)$。
+
 \subsection{目标函数和算法}
 $A$域和$B$域分别为空中域和水下多模态域，给定图像$x_A \in A$和输入目标域风格随机采样编码$z_B$，我们训练从$A \rightarrow B$的方向上的转译，其中用到的目标函数如下所示。
 
@@ -42,17 +69,16 @@ L_{cyc} = \mathbb{E}[\| G_A(\hat{c}, s_A) - x_A \|_1]
 
 其中$G_A(\hat{c}, s_A)$是$x_A$的重建结果。
 
-\textbf{Identity loss}. We adopt identity mapping between real sample and $G_A(c,s_A)$. 
+\textbf{同一性损失。}我们在真实样本和生成结果$G_A(c,s_A)$之间采用同一性映射
 
 \begin{equation}
 \label{equ:idt}
 L_{idt} = \mathbb{E}[\| G_A(c, s_A) - x_A \|_1]
 \end{equation}
 
-When encoders successfully disentangle input sample image into content and style parts, the distance between real sample and $G_A(c,s_A)$ is very small in theory.
+当编码器成功地将输入图像分解成内容和风格两部分信息，理论上输入的真实数据应该跟合成的$G_A(c,s_A)$之间的距离非常接近。该损失保证生成器$G_A(\cdot)$生成$A$域的风格，不会自主地修改图像的色调，使得整体的风格产生变化。
 
-\textbf{Content-consistent loss}.
-To keep the content from source image unchanged between cross-domain translation, not only real image and the generated image but also the disentangled content codes $c$ and $\hat{c}$ from them should be consistent.
+\textbf{内容一致性损失。}为了保证从源域到目标域的跨域转译过程中内容保持完整，目标函数加入内容一致性损失，即真实样本和生成结果经过内容编码器分解得到的内容向量所包含的信息应该是一致的。
 
 \begin{equation}
 \label{equ:cc}
@@ -62,10 +88,10 @@ L_{cc} & = \mathbb{E}[\| E_C(G_A(c, s_A)) - E_C(x_A) \|_1] \\
 \end{aligned}
 \end{equation}
 
-\textbf{KL loss}. The KL loss L aims to align the representation of disentangled content and style with a prior Gaussian distribution.
+\textbf{KL损失。}KL损失致力于将分解后的内容和风格表达对齐高斯先验分布。
 
-\textbf{Full objective.}
-Our full objective functions can be summarized as follows:
+\textbf{总目标函数。}我们总的目标函数可以概括如下：
+
 \begin{equation}
 \label{equ:full}
 \begin{aligned}
@@ -74,35 +100,17 @@ Our full objective functions can be summarized as follows:
 \end{aligned}
 \end{equation}
 
-where $\lambda_{cyc}$, $\lambda_{idt}$, $\lambda_{cc}$ and $\lambda_{kl}$ are hyperparameters for each term. We also further test our model using reference images instead of latent vectors when generating style codes. We set these parameters to $10$, $5$, $1$, $0.01$ by default.
-
-\subsection{网络结构}
-
-\begin{figure*}[ht]
-    \centering
-    \includegraphics[width=1\textwidth]{figures/MUGAN.pdf}
-    \caption{Caption}
-    \label{fig:my_label}
-\end{figure*}
+其中$\lambda_{cyc}$，$\lambda_{idt}$，$\lambda_{cc}$和$\lambda_{kl}$是对应每单项损失的超参数。后续除了分布采样向量，我们还用引导图像经过经过风格编码器后得到风格编码来测试我们模型的有效性。我们默认设置这些参数分别为$10$，$5$，$1$，$0.01$。
 
 \section{水下图像多样式域转译设计}
 
 \subsection{问题及分析}
-\subsection{模型创新点}
 \subsection{目标函数和算法}
 \subsection{网络结构}
 
+\section{实验环境}
+整个网络使用Pytorch框架，计算机环境CPU型号为Intel$^\circledR$ Core$^{\text{TM}}$ i5-8500 CPU，操作系统为Ubuntu 16.04 LTS版本，显卡型号为Nvidia GeForce GTX 1070，内存128GB，显存为8GB。
 
-\section{建立模型算法和损失函数}
-\subsection{模型创新点}
-\subsection{目标函数和算法}
-\subsection{网络结构}
-
-
-% \section{实验与分析}
-% \subsection{数据集设置与实验环境}
-% \subsection{评价指标}
-% \subsection{消融实验}
-% \subsection{与先进方法对比}
+本工作中使用的基准模型采用官方Github中Pytorch版本代码进行实验。
 
 \section{本章小结}
