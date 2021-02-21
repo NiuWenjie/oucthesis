@@ -56,7 +56,7 @@ Underwater Vision Benchmark 2017 (UVB 2017)是我们实验室用ZED和Kinect立�
 	\label{fig:lpips}
 \end{figure*}
 
-在实验中，我们选用Learned Perceptual Image Patch Similarity (LPIPS)来评价多样性指标。LPIPS最初由Zhang等人~\cite{zhang2018perceptual}提出，用于衡量成对图像之间的相似程度。相比于传统的图像相似度评价指标，LPIPS指标得到的结果和人的视觉评价有更高的相关性。对于多对图像，排列组合成平方次图像对，计算每对之间的相似性，求得平均值作为指标的结果。
+在实验中，我们选用Learned Perceptual Image Patch Similarity (LPIPS)来评价多样性指标。LPIPS最初由Zhang等人~\cite{zhang2018perceptual}提出，相比于传统的图像相似度评价指标，LPIPS指标得到的结果和人的视觉评价有更高的相关性。LPIPS用来评价生成结果的多样性，用预训练好的AlexNetAlex~\cite{krizhevsky2017imagenet}网络来提取特征后计算$L_1$距离。对于每个测试图像，用指定个随机采样的潜在向量来生成指定个数的输出结果，对于同一个输入的多个结果对之间计算平均距离，最后所有测试输入的均值，并把这个数值当作LPIPS结果。
 
 \section{水下图像跨域多模态合成结果分析}
 \subsection{定性结果分析}
@@ -172,12 +172,50 @@ Underwater Vision Benchmark 2017 (UVB 2017)是我们实验室用ZED和Kinect立�
 
 
 
+
 \section{水下图像多样式域合成实验设计}
 \subsection{实验设置}
+基准方法我们总共选择了三种，经典无监督跨域图像转译方法CycleGAN~\cite{zhu2017unpaired}，两种最新颖的多域转译模型StarGAN v2~\cite{choi2020stargan}和MDMM~\cite{lee2020drit++}（DRIT++中拓展至多域转译任务Github项目）。其中，跨域转译模型CycleGAN可以学到两个域一对一的映射，在进行多域转译时，需要域两两之间进行训练，无法一次同时实现多个域的训练。
+
+CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循环一致性损失，实现无监督的跨域转译；MDMM依旧使用分解的方式，用一个生成器实现多个域的转译，给定其中两个域的图像和one-hot编码，分解到共享内容空间和域特有风格空间，类似DRIT跨域转译方式进行训练；StarGAN v2是在多域转译模型StarGAN
 
 \subsection{数据集设置}
+由于水下图像数据限制，在多域转译任务中我们实验同样会用到多个数据集组合。在水下多样式域转译任务中，主要使用RUIE~\cite{liu2019real}，UWCNN~\cite{li2020underwater}，UVB 2017数据集，另外使用EUVP~\cite{islam2019fast}，UIEB~\cite{li2019underwater}作为补充数据集，在实验中填补数据不充分的问题。
+
+\begin{figure*}[ht]
+    \centering
+  \includegraphics[width=\textwidth]{figures/RUIE_dataset_domain.pdf}
+  \caption{RUIE数据集多域转译示例。}
+  \label{fig:ruie_domain}
+\end{figure*}
+
+如图~\ref{fig:ruie_domain}所示，RUIE数据集进行多样式域转译实验时，选择RUIE的子集UCCS的三种作为水下三个样式域，每种100张，选取EUVP中的100张无水子集作为空中域。在进行测试实验时，选择EUVP中无水域的100张作为空中域，测试训练模型，以测试模型转译到水下多个样式域的效果。
+
+\begin{figure*}[ht]
+    \centering
+  \includegraphics[width=\textwidth]{figures/UVB_dataset_domain.pdf}
+  \caption{UVB 2017数据集多域转译示例。}
+  \label{fig:uvb_domain}
+\end{figure*}
+
+如图~\ref{fig:uvb_domain}所示，Underwater Vision Benchmark 2017（UVB 2017）数据集进行多样式域转译实验时，选择衰减为0中66张作为的空中域，衰减为1.2、1.58、3.0四种样式明显的作为水下样式域。在进行测试时，选择无水中的30张测试模型转译到多样式域的效果。
+
+\begin{figure*}[ht]
+    \centering
+  \includegraphics[width=\textwidth]{figures/UWCNN_dataset_domain.pdf}
+  \caption{UWCNN数据集多域转译示例。}
+  \label{fig:uwcnn_domain}
+\end{figure*}
+
+如图~\ref{tab:uwcnn_comparison}所示，UWCNN数据集进行多样式域转译实验时，选择室内图像中249张作为空中域，近海type-1，type-3，type-5，type-7四种较为明显样式的域作为水下多样式域，每个域选择249张。测试时，选择100张进行测试，看模型转译成多多样式域的效果。
 
 \subsection{评价准则}
+% 和多样性
+为了方便进行质量评价，我们对图像的真实性进行评价。真实性选用Fréchet Inception Distance(FID)来进行评价。FID比较模型生成样本和真实样本统计特性的问题。FID越低，图像质量越好;反之，得分越高，质量越差。较低的FID意味着两个分布之间更接近，也就意味着生成图片的跟真实结果之间相似性较高。在进行多样式域实验中，我们生成的多个域结果与该域真实图像之间计算FID，就可以比较出每个域的生成结果与真实结果之间的相似性。
+% 多样性我们选择Learned Perceptual Image Patch Similarity (LPIPS)来评价。预训练好的AlexNet~\cite{krizhevsky2017imagenet}网络来提取特征后计算$L_1$距离，同一个输入的多个结果对之间计算平均距离，对于测试图像求平均值作为LPIPS结果。在进行多样式域转译实验中，输入会转译成多个样式域的结果
+
+另外，还使用水下指标UCIQE和UIQM来验证生成结果的真实性。UCIQE和UIQM都是无参考批评家指标，当生成结果足够真实时，目标域的生成结果和真实样本在这两个指标在色彩、饱和度、对比度上，清晰度等质量上是一致的。通过对比真实样本和合成样本的评价结果，可以看出样本的真实性。
+
 
 \section{水下图像多样式域合成结果分析}
 \subsection{定性结果分析}
