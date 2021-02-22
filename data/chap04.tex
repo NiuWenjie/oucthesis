@@ -45,17 +45,17 @@ $A$域和$B$域分别为空中域和水下多模态域，给定图像$x_A \in A$
 
 \begin{equation}
 \label{equ:adv_a_}
-L_{adv}^{\tilde{x}_A} = \mathbb{E}[\log D_A(x_A)] + \mathbb{E}[\log(1-D_A(G_A(c,s_A)))]
+\mathcal{L}_{adv}^{\tilde{x}_A} = \mathbb{E}[\log D_A(x_A)] + \mathbb{E}[\log(1-D_A(G_A(c,s_A)))]
 \end{equation}
 
 \begin{equation}
 \label{equ:adv_a}
-L_{adv}^{\hat{x}_A} = \mathbb{E}[\log D_A(x_A)] + \mathbb{E}[\log(1-D_A(G_A(\hat{c},s_A)))]
+\mathcal{L}_{adv}^{\hat{x}_A} = \mathbb{E}[\log D_A(x_A)] + \mathbb{E}[\log(1-D_A(G_A(\hat{c},s_A)))]
 \end{equation}
 
 \begin{equation}
 \label{equ:adv_b}
-L_{adv}^{\hat{x}_B} = \mathbb{E}[\log D_B(x_B)] + \mathbb{E}[\log(1-D_B(G_B(c,z_B)))]
+\mathcal{L}_{adv}^{\hat{x}_B} = \mathbb{E}[\log D_B(x_B)] + \mathbb{E}[\log(1-D_B(G_B(c,z_B)))]
 \end{equation}
 
 生成器$G_A$学习使用来自$A$域的风格样式$s_A$生成$A$域具有足够真实性的图像$G_A(c,s_A)$和$G_A(\hat{c},s_A)$，企图可以混淆真实图像和生成结果，让$A$域判别器$D_A$无法区分他们。类似地，生成器$G_B$学习使用目标域分布采样编码$z_B$合成$B$域具有真实性的图像结果$G_B(c,z_B)$，目标也是让$B$域判别器$D_B$无法区分输入是真实图像还是生成假结果。
@@ -64,7 +64,7 @@ L_{adv}^{\hat{x}_B} = \mathbb{E}[\log D_B(x_B)] + \mathbb{E}[\log(1-D_B(G_B(c,z_
 
 \begin{equation}
 \label{equ:cycle}
-L_{cyc} = \mathbb{E}[\| G_A(\hat{c}, s_A) - x_A \|_1]
+\mathcal{L}_{cyc} = \mathbb{E}[\| G_A(\hat{c}, s_A) - x_A \|_1]
 \end{equation}
 
 其中$G_A(\hat{c}, s_A)$是$x_A$的重建结果。
@@ -73,7 +73,7 @@ L_{cyc} = \mathbb{E}[\| G_A(\hat{c}, s_A) - x_A \|_1]
 
 \begin{equation}
 \label{equ:idt}
-L_{idt} = \mathbb{E}[\| G_A(c, s_A) - x_A \|_1]
+\mathcal{L}_{idt} = \mathbb{E}[\| G_A(c, s_A) - x_A \|_1]
 \end{equation}
 
 当编码器成功地将输入图像分解成内容和风格两部分信息，理论上输入的真实数据应该跟合成的$G_A(c,s_A)$之间的距离非常接近。该损失保证生成器$G_A(\cdot)$生成$A$域的风格，不会自主地修改图像的色调，使得整体的风格产生变化。
@@ -83,7 +83,7 @@ L_{idt} = \mathbb{E}[\| G_A(c, s_A) - x_A \|_1]
 \begin{equation}
 \label{equ:cc}
 \begin{aligned}
-L_{cc} & = \mathbb{E}[\| E_C(G_A(c, s_A)) - E_C(x_A) \|_1] \\
+\mathcal{L}_{cc} & = \mathbb{E}[\| E_C(G_A(c, s_A)) - E_C(x_A) \|_1] \\
        & = \mathbb{E}[\| \hat{c} - c \|_1]
 \end{aligned}
 \end{equation}
@@ -95,8 +95,8 @@ L_{cc} & = \mathbb{E}[\| E_C(G_A(c, s_A)) - E_C(x_A) \|_1] \\
 \begin{equation}
 \label{equ:full}
 \begin{aligned}
-\min_{E,G}\max_{D} & L_{adv}^{\tilde{x}_A}+L_{adv}^{\hat{x}_A}+L_{adv}^{\hat{x}_B} \\
-+&\lambda_{cyc}L_{cyc}+\lambda_{idt}L_{idt}+\lambda_{cc}L_{cc}+\lambda_{kl}L_{kl}
+\min_{E,G}\max_{D} & \mathcal{L}_{adv}^{\tilde{x}_A}+\mathcal{L}_{adv}^{\hat{x}_A}+\mathcal{L}_{adv}^{\hat{x}_B} \\
++&\lambda_{cyc}\mathcal{L}_{cyc}+\lambda_{idt}\mathcal{L}_{idt}+\lambda_{cc}\mathcal{L}_{cc}+\lambda_{kl}\mathcal{L}_{kl}
 \end{aligned}
 \end{equation}
 
@@ -114,10 +114,12 @@ L_{cc} & = \mathbb{E}[\| E_C(G_A(c, s_A)) - E_C(x_A) \|_1] \\
 %我们设置的方法好处
 在用多域转译方法解决我们转译到水下多个样式条件下图像问题时，我们设计了一个多域转译模型。使得在转移过程中目标内容保持不变，多个样式域仅仅改变图像中的水下环境条件。在不需要配对数据的情况下，给定要转译的多个域图像，通过对各个域进行编码作为域控制条件，实现到多个样式域的转译任务，对数据配对没有要求，有很强的泛化能力。
 
+\subsection{模型结构}
+
 \subsection{目标函数和算法}
+我们
 
 
-\subsection{网络结构}
 
 
 

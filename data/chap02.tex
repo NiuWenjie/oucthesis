@@ -112,16 +112,16 @@ LSGAN目标函数定义如式~\ref{equ:equ_lsgan_d}和~\ref{equ:equ_lsgan_g}，�
 
 CGAN通过结合标签信息来提高生成数据的质量，ACGAN~\cite{odena2017conditional}除此之外，还通过重建标签信息来提高生成数据的质量。模型结构如图~\ref{fig:pic_acgan}所示，生成器的输入是分类标签和固定的噪声分布，判别器的输出除了指示真假的对抗损失外，还出增加一个辅助分类器判别分类标签，输入的标签当作目标进行反馈，提高判别网络的学习效果。
 
-目标函数包含两个部分：判别真实性的对抗损失$L_S$如式~\ref{equ:equ_acgan_s}和类别判别损失$L_C$如式~\ref{equ:equ_acgan_c}。其核心贡献对于真实图片Xreal和生成器伪造的图片Xfake，辅助分类器应该能够预测它所属的类别。噪声分布$Z$独立于类别标签$C$；判别器训练中试图最大化$L_S+L_C$，而生成器最大化$L_C-L_S$。
+目标函数包含两个部分：判别真实性的对抗损失$\mathcal{L}_S$如式~\ref{equ:equ_acgan_s}和类别判别损失$\mathcal{L}_C$如式~\ref{equ:equ_acgan_c}。其核心贡献对于真实图片Xreal和生成器伪造的图片Xfake，辅助分类器应该能够预测它所属的类别。噪声分布$Z$独立于类别标签$C$；判别器训练中试图最大化$\mathcal{L}_S+\mathcal{L}_C$，而生成器最大化$\mathcal{L}_C-\mathcal{L}_S$。
 
 \begin{equation}
 \label{equ:equ_acgan_s}
-L_S = \mathbb{E}[\log P(S = real | X_{real})] + \mathbb{E}[logP(S = fake | X_{fake})]
+\mathcal{L}_S = \mathbb{E}[\log P(S = real | X_{real})] + \mathbb{E}[logP(S = fake | X_{fake})]
 \end{equation}
 
 \begin{equation}
 \label{equ:equ_acgan_c}
-L_C = \mathbb{E}[\log P(C = c | X_{real})] + \mathbb{E}[logP(C = c | X_{fake})]
+\mathcal{L}_C = \mathbb{E}[\log P(C = c | X_{real})] + \mathbb{E}[logP(C = c | X_{fake})]
 \end{equation}
 
 ACGAN的一个作用就是弥补数据的不足，让计算机拥有了能够模仿现有数据从而生成独特数据的能力，用途相当广泛。
@@ -187,20 +187,20 @@ pix2pix的生成器和判别器网络结构在DCGAN的深度卷积的基础上�
 
 \begin{equation}
 \label{equ:pix2pix_cgan}
-L_{cGAN}(G,D) = \mathbb{E}_{x,y}[\log D(x,y)] + \mathbb{E}_{x,z}[\log(1-D(x,G(x,z)))]
+\mathcal{L}_{cGAN}(G,D) = \mathbb{E}_{x,y}[\log D(x,y)] + \mathbb{E}_{x,z}[\log(1-D(x,G(x,z)))]
 \end{equation}
 
 \begin{equation}
 \label{equ:pix2pix_l1}
-L_{L1}(G) = \mathbb{E}_{x,y,z}[\parallel y-G(x,z) \parallel_1]
+\mathcal{L}_{L1}(G) = \mathbb{E}_{x,y,z}[\parallel y-G(x,z) \parallel_1]
 \end{equation}
 
 \begin{equation}
 \label{equ:pix2pix}
-\min \limits_G \max \limits_D L_{cGAN}(G,D) + \lambda L_{L1}(G)
+\min \limits_G \max \limits_D \mathcal{L}_{cGAN}(G,D) + \lambda \mathcal{L}_{L1}(G)
 \end{equation}
 
-基于cGAN的目标函数为~\ref{equ:pix2pix_cgan}，$L_1$损失为~\ref{equ:pix2pix_l1}，总目标函数为~\ref{equ:pix2pix}。$L_1$损失可以恢复图像低频部分让生成图像跟真实训练数据尽量相似，对抗损失额可以恢复图像的高频部分细节。
+基于cGAN的目标函数为~\ref{equ:pix2pix_cgan}，$\mathcal{L}_1$损失为~\ref{equ:pix2pix_l1}，总目标函数为~\ref{equ:pix2pix}。$\mathcal{L}_1$损失可以恢复图像低频部分让生成图像跟真实训练数据尽量相似，对抗损失额可以恢复图像的高频部分细节。
 
 
 \subsection{非成对图像转译方法}
@@ -218,7 +218,7 @@ CycleGAN~\cite{zhu2017unpaired}是一种新颖的无监督循环生成结构，�
 \begin{equation}
 \label{equ:cyclegan}
 \begin{aligned}
-L_{cyc}(F,G,X,Y)= & \mathbb{E}_{x \sim p_{data}(x)}[\parallel G(F(x))-x \parallel_1]\\
+\mathcal{L}_{cyc}(F,G,X,Y)= & \mathbb{E}_{x \sim p_{data}(x)}[\parallel G(F(x))-x \parallel_1]\\
 & + \mathbb{E}_{y \sim p_{data}(y)}[\parallel G(F(y))-y \parallel_1]
 \end{aligned}
 \end{equation}
@@ -228,8 +228,8 @@ CycleGAN创新提出的循环一致性损失函数如~\ref{equ:cyclegan}所示�
 \begin{equation}
 \label{equ:cycle_obj}
 \begin{aligned}
-L=L_{GAN}(F,D_Y,X,Y)&+L_{GAN}(G,D_X,X,Y)\\
-& + \lambda L_{cyc}(F,G,X,Y)
+\mathcal{L}=\mathcal{L}_{GAN}(F,D_Y,X,Y)&+\mathcal{L}_{GAN}(G,D_X,X,Y)\\
+& + \lambda \mathcal{L}_{cyc}(F,G,X,Y)
 \end{aligned}
 \end{equation}
 
@@ -256,7 +256,7 @@ MUNIT结构包括生成结构和判别结构，生成结构包括编码器和解
 
 \begin{equation}
 \label{equ:munit_rec_x1}
-L_{recon}^{x_1} = \mathbb{E}_{x_1 \sim p(x_1)}[\parallel G_1(E_1^c(x_1),E_1^s(x_1))-x_1\parallel_1]
+\mathcal{L}_{recon}^{x_1} = \mathbb{E}_{x_1 \sim p(x_1)}[\parallel G_1(E_1^c(x_1),E_1^s(x_1))-x_1\parallel_1]
 \end{equation}
 
 % \begin{equation}
@@ -268,7 +268,7 @@ L_{recon}^{x_1} = \mathbb{E}_{x_1 \sim p(x_1)}[\parallel G_1(E_1^c(x_1),E_1^s(x_
 
 \begin{equation}
 \label{equ:munit_rec_c1}
-L_{recon}^{c_1} = \mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\parallel E_2^c(G_2(c_1,s_2))-c_1\parallel_1]
+\mathcal{L}_{recon}^{c_1} = \mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\parallel E_2^c(G_2(c_1,s_2))-c_1\parallel_1]
 \end{equation}
 
 % \begin{equation}
@@ -283,14 +283,14 @@ L_{recon}^{c_1} = \mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\parallel E_2^c(
 
 \begin{equation}
 \label{equ:munit_rec_s2}
-L_{recon}^{s_2} = \mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\parallel E_2^s(G_2(c_1,s_2))-s_2\parallel_1]
+\mathcal{L}_{recon}^{s_2} = \mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\parallel E_2^s(G_2(c_1,s_2))-s_2\parallel_1]
 \end{equation}
 
 目标函数(如式~\ref{equ:munit})是对抗损失(如式~\ref{equ:munit_adv})以及重建损失函数之和。
 \begin{equation}
 \label{equ:munit_adv}
 \begin{aligned}
-L_{GAN}^{x_2} = & \mathbb{E}_{x_2 \sim p(x_2)}[\log D_2(x_2)] \\
+\mathcal{L}_{GAN}^{x_2} = & \mathbb{E}_{x_2 \sim p(x_2)}[\log D_2(x_2)] \\
 & +\mathbb{E}_{c_1 \sim p(c_1), s_2 \sim q(s_2)}[\log(1-D_2(G_2(c_1,s_2)))]
 \end{aligned}
 \end{equation}
@@ -298,10 +298,10 @@ L_{GAN}^{x_2} = & \mathbb{E}_{x_2 \sim p(x_2)}[\log D_2(x_2)] \\
 \begin{equation}
 \label{equ:munit}
 \begin{aligned}
-\min \limits_{E_1,E_2,G_1,G_2} \max \limits_{D_1,D_2} L(E_1,E_2,G_1,G_2,D_1,D_2) & = L_{GAN}^{x_1}+L_{GAN}^{x_2} \\
-& +\lambda_x(L_{recon}^{x_1}+L_{recon}^{x_2}) \\
-& + \lambda_c(L_{recon}^{c_1}+L_{recon}^{c_2}) \\
-& +\lambda_s(L_{recon}^{s_1}+L_{recon}^{s_2})
+\min \limits_{E_1,E_2,G_1,G_2} \max \limits_{D_1,D_2} \mathcal{L}(E_1,E_2,G_1,G_2,D_1,D_2) & = \mathcal{L}_{GAN}^{x_1}+\mathcal{L}_{GAN}^{x_2} \\
+& +\lambda_x(\mathcal{L}_{recon}^{x_1}+\mathcal{L}_{recon}^{x_2}) \\
+& + \lambda_c(\mathcal{L}_{recon}^{c_1}+\mathcal{L}_{recon}^{c_2}) \\
+& +\lambda_s(\mathcal{L}_{recon}^{s_1}+\mathcal{L}_{recon}^{s_2})
 \end{aligned}
 \end{equation}
 
@@ -320,7 +320,7 @@ DRIT~\cite{lee2018diverse}跟MUNIT在思路上完全一致，都是共享内容�
 \begin{equation}
 \label{equ:drit_adv}
 \begin{aligned}
-L_{adv}^{content} & = \mathbb{E}_x[\frac{1}{2}\log D^c(E_X^c(x))+\frac{1}{2}\log(1-D^c(E_X^c(x)))] \\
+\mathcal{L}_{adv}^{content} & = \mathbb{E}_x[\frac{1}{2}\log D^c(E_X^c(x))+\frac{1}{2}\log(1-D^c(E_X^c(x)))] \\
 & + \mathbb{E}_y[\frac{1}{2}\log D^c(E_Y^c(y))+\frac{1}{2}\log(1-D^c(E_Y^c(y)))] 
 \end{aligned}
 \end{equation}
@@ -330,7 +330,7 @@ L_{adv}^{content} & = \mathbb{E}_x[\frac{1}{2}\log D^c(E_X^c(x))+\frac{1}{2}\log
 \begin{equation}
 \label{equ:drit_cc}
 \begin{aligned}
-L_1^{cc}(G_x,G_Y,E_X^c,E_Y^c,E_X^a,E_Y^a) = \mathbb{E}_{x,y}&[\parallel G_X(E_Y^c(v),E_X^a(u))-x \parallel_1 \\
+\mathcal{L}_1^{cc}(G_x,G_Y,E_X^c,E_Y^c,E_X^a,E_Y^a) = \mathbb{E}_{x,y}&[\parallel G_X(E_Y^c(v),E_X^a(u))-x \parallel_1 \\
 & + \parallel G_Y(E_X^c(u),E_Y^a(v))-y \parallel_1]
 \end{aligned}
 \end{equation}
@@ -338,8 +338,8 @@ L_1^{cc}(G_x,G_Y,E_X^c,E_Y^c,E_X^a,E_Y^a) = \mathbb{E}_{x,y}&[\parallel G_X(E_Y^
 \begin{equation}
 \label{equ:drit}
 \begin{aligned}
-\min \limits_{G,E,E^a} \max \limits_{D,D^c} & \lambda_{adv}^{content}L_{adv}^c + \lambda_1^{cc}L_1^{cc} + \lambda_{adv}^{domain}L_{adv}^{domain} \\
-& + \lambda_1^{recon}L_1^{recon} + \lambda_1^{latent}L_1^{latent} + \lambda_{KL}L_{KL}
+\min \limits_{G,E,E^a} \max \limits_{D,D^c} & \lambda_{adv}^{content}\mathcal{L}_{adv}^c + \lambda_1^{cc}\mathcal{L}_1^{cc} + \lambda_{adv}^{domain}\mathcal{L}_{adv}^{domain} \\
+& + \lambda_1^{recon}\mathcal{L}_1^{recon} + \lambda_1^{latent}\mathcal{L}_1^{latent} + \lambda_{KL}\mathcal{L}_{KL}
 \end{aligned}
 \end{equation}
 

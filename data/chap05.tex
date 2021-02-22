@@ -168,10 +168,51 @@ Underwater Vision Benchmark 2017 (UVB 2017)是我们实验室用ZED和Kinect立�
 
 \subsection{消融实验}
 
-为了验证我们设计网络的有效性，主要对于转译器部分进行模块验证。对于我们提出的内容一致性限制的有效性，我们设计了几种消融实验，一是内容一致性限制在MUNIT、DRIT++经典分解表达方法上的有效性；二是MUGAN模型中内容一致性限制的有效性。
+为了验证我们设计网络的有效性，主要对于转译器部分进行模块验证。通过使用MUNIT和DRIT++的转译器来验证我们转译器结构的有效性；通过对比有无内容一致性损失限制的结果，验证我们提出内容一致性限制的有效性。
 
+\begin{table*}[htbp]
+  \centering
+  \caption{在RUIE、UVB 2017和UWCNN数据集上，转译器结构的比价结果。}
+    \begin{tabular}{c|c|c|c|c|c|c}
+    \hline
+    \multirow{2}[3]{*}{} & \multicolumn{2}{c|}{MUNIT} & \multicolumn{2}{c|}{DRIT++} & \multicolumn{2}{c}{Ours} \\
+\cmidrule{2-7}          & \multicolumn{1}{c|}{FID$\downarrow$ } & \multicolumn{1}{c|}{LPIPS$\uparrow$} & \multicolumn{1}{c|}{FID$\downarrow$ } & \multicolumn{1}{c|}{LPIPS$\uparrow$} & \multicolumn{1}{c|}{FID$\downarrow$ } & LPIPS$\uparrow$ \\
+    \midrule
+    RUIE  & 88.0388 & 0.438 & 92.2588 & 0.462 & \textbf{83.2399} & \textbf{0.579} \\
+    UVB  & 197.7265 & 0.469 & 181.7613 & 0.489 & \textbf{172.7404} & \textbf{0.493} \\
+    UWCNN & 185.4869 & 0.627 & 185.1982 & 0.598 & \textbf{129.6982} & \textbf{0.736} \\
+    \hline
+    \end{tabular}%
+  \label{tab:comp_G}%
+\end{table*}%
 
+表格~\ref{tab:comp_G}所示为对于转译器有效性的验证结果。在相同的网络框架下，对比了基于分解表达方法MUNIT、DRIT++转译器，用真实性和多样性指标FID和LPIPS共同验证我们转译器结构的有效性。从表格中可以看出，我们转译器合成的水下图像多模态结果在真实性和多样性上都优于同样基于分解表达学习的经典方法MUNIT和DRIT++。FID是所有转译器生成结果中最低的，最接近真实样本分布，LPIPS是所有转译结果中最高的，多样性丰富。
 
+\begin{figure*}[htp]
+    \centering
+  \includegraphics[width=\textwidth]{figures/Ablation_modal_ruie.pdf}
+  \caption{RUIE数据集上，转译器有效性对比结果。}
+  \label{fig:ablation_modal_ruie}
+\end{figure*}
+
+图~\ref{fig:ablation_modal_ruie}所示是RUIE数据集上本工作的转译器跟MUNIT、DRIT++转译器生成结果对比。在RUIE数据集上，我们对比了使用MUNIT、DRIT++转译器的生成结果。在多模态样式模糊程度和视觉效果任务下，MUNIT、DRIT++转译器在相同网络架构下，通过对目标域分布随机采样，生成多模态结果。其中各个方法都能成功生成多模态样式，在MUNIT和DRIT++中噪声对颜色样式造成影响十分明显。MUNIT方法中，内容损失很严重，在模态变化中，内容保存不完整，DRIT++中，内容能保留较为完整，但是三个模态中，颜色变化明显，针对模糊程度没有明显的变化。
+
+\begin{table*}[htbp]
+  \centering
+  \caption{在RUIE、UVB 2017和UWCNN数据集上，转译器结构有无内容一致性限制结果。}
+    \begin{tabular}{c|c|c|c|c|c|c}
+    \hline
+    \multirow{2}[3]{*}{} & \multicolumn{2}{c|}{RUIE} & \multicolumn{2}{c|}{UVB 2017} & \multicolumn{2}{c}{UWCNN} \\
+\cmidrule{2-7}          & \multicolumn{1}{c|}{FID$\downarrow$ } & \multicolumn{1}{c|}{LPIPS$\uparrow$} & \multicolumn{1}{c|}{FID$\downarrow$ } & \multicolumn{1}{c|}{LPIPS$\uparrow$} & \multicolumn{1}{c|}{FID$\downarrow$ } & LPIPS$\uparrow$ \\
+    \midrule
+    Ours  & 83.2399 & 0.579 & 172.7404 & 0.493 & 129.6982 & 0.736 \\
+    Ours w/o $\mathcal{L}_{cc}$ & 85.0344 & 0.575 & 175.3312 & 0.499 & 129.8680 & 0.724 \\
+    \hline
+    \end{tabular}%
+  \label{tab:ablation_modal_lcc}%
+\end{table*}%
+
+表格~\ref{tab:ablation_modal_lcc}所示为转译器有无内容一致性损失$\mathcal{L}_{cc}$的对比结果，在RUIE、UVB 2017和UWCNN数据集上都进行了对比实验。在对比结果中我们可以看到，在有内容一致性损失$\mathcal{L}_{cc}$时，我们的结果在真实性和多样性上都有比较稳定的结果，当没有内容一致性损失$\mathcal{L}_{cc}$时，生成结果中的内容保留不如有内容一致性损失$\mathcal{L}_{cc}$的结果，所以在FID较高，真实性不如有内容一致性损失$\mathcal{L}_{cc}$结果的真实性，但是在多样性上，内容一致性损失$\mathcal{L}_{cc}$对最终的结果影响不大，所以LPIPS结果接近。
 
 \section{水下图像多样式域合成实验设计}
 \subsection{实验设置}
@@ -219,8 +260,79 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
 
 \section{水下图像多样式域合成结果分析}
 \subsection{定性结果分析}
+\begin{figure*}[htp]
+    \centering
+  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \caption{在RUIE数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
+  \label{fig:comparison_ruie_domain}
+\end{figure*}
+
+图~\ref{fig:comparison_ruie_domain}展示了不同方法在RUIE数据集上的定性结果对比。左边第一列表示模型输入图像，右边每列代表标注方法对应的结果。从对比图中可以看到，CycleGAN、MDMM、StarGAN v2 我们的方法。
+
+
+\begin{figure*}[htp]
+    \centering
+  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \caption{在UVB 2017数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
+  \label{fig:comparison_uvb_domain}
+\end{figure*}
+
+\begin{figure*}[htp]
+    \centering
+  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \caption{在UWCNN数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
+  \label{fig:comparison_uwcnn_domain}
+\end{figure*}
 
 \subsection{定量结果分析}
+真实性定量指标FID结果表格~\ref{tab:ruie_domain_fid}，表格~\ref{tab:uvb_domain_fid}和~\ref{tab:uwcnn_domain_fid}所示。在图像FID质量分析中，我们对比了能完成水下图像多样式域转译的方法CycleGAN、MDMM、StarGAN v2基准方法，在RUIE、UVB 2017、UWCNN数据集上分别进行了测评，测评的基准方法全部来自作者Github给出的完整代码和标准使用方式。通过用FID评价，能够客观的评价各种方法的生成结果。
 
+\begin{table*}[ht]
+\centering
+\caption{在RUIE数据集上，基准方法和我们方法的真实性FID定量比较。}
+  \begin{tabular}{c|ccccccc}
+    \hline\noalign{\smallskip}
+    FID$\downarrow$ & CycleGAN & MDMM & StarGAN v2 & Ours \\
+    \noalign{\smallskip}\hline\noalign{\smallskip}
+    Input$\rightarrow$域A & 105.2800 & 154.0302 & 221.6996 & \textbf{82.8535}  \\
+    Input$\rightarrow$域B & \textbf{127.3358} & 165.2080 & 160.4444 & 132.0970  \\
+    Input$\rightarrow$域C & 99.8060 & 132.0193 & 201.7589 & \textbf{78.8587}  \\
+    \noalign{\smallskip}\hline
+  \end{tabular}
+  \label{tab:ruie_domain_fid}
+\end{table*}
+
+表格~\ref{tab:ruie_domain_fid}中，
+
+\begin{table*}[ht]
+\centering
+\caption{在UVB 2017数据集上，基准方法和我们方法的真实性FID定量比较。}
+  \begin{tabular}{c|ccccccc}
+    \hline\noalign{\smallskip}
+    FID$\downarrow$ & CycleGAN & MDMM & StarGAN v2 & Ours \\
+    \noalign{\smallskip}\hline\noalign{\smallskip}
+    Input$\rightarrow$域A & 231.2559 & 308.1764 & 132.5135 & \textbf{123.4455}  \\
+    Input$\rightarrow$域B & \textbf{203.3703} & 277.9446 & 261.4843 & 249.0746  \\
+    Input$\rightarrow$域C & \textbf{137.9410} & 249.9113 & 203.4555 & 186.2838  \\
+    \noalign{\smallskip}\hline
+  \end{tabular}
+  \label{tab:uvb_domain_fid}
+\end{table*}
+
+\begin{table*}[ht]
+\centering
+\caption{在UWCNN数据集上，基准方法和我们方法的真实性FID定量比较。}
+  \begin{tabular}{c|ccccccc}
+    \hline\noalign{\smallskip}
+    FID$\downarrow$ & CycleGAN & MDMM & StarGAN v2 & Ours \\
+    \noalign{\smallskip}\hline\noalign{\smallskip}
+    Input$\rightarrow$域A & 141.4799 & 213.1867 & 216.8333 & \textbf{120.0408}  \\
+    Input$\rightarrow$域B & 132.0554 & 167.2517 & 168.5740 & \textbf{116.5354}  \\
+    Input$\rightarrow$域C & 116.4376 & 158.9736 & 150.5446 & \textbf{98.0187}  \\
+    Input$\rightarrow$域D & \textbf{72.5141}  & 136.5694 & 114.0044 & 72.6410  \\
+    \noalign{\smallskip}\hline
+  \end{tabular}
+  \label{tab:uwcnn_domain_fid}
+\end{table*}
 
 \subsection{消融实验}
