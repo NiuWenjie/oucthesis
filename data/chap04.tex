@@ -116,6 +116,15 @@ $A$域和$B$域分别为空中域和水下多模态域，给定图像$x_A \in A$
 
 \subsection{模型结构}
 
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/Domain_network.pdf}
+    \caption{水下图像多样式域转译网络结构。}
+    \label{fig:domain_net}
+\end{figure*}
+
+我们设置输入数据Input，其他样式的数据分别作为$A$，$B$、$C$、$D$等依次顺序排列域。我们的目标是通过网络结构使得输入能够学会转译到各个域中，其中转译结果中的内容跟输入保持一致，不同的域之间只有样式发生变化，样式可以是浑浊度、颜色等视觉效果变量。
+
 \subsection{目标函数和算法}
 我们
 

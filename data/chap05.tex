@@ -218,7 +218,9 @@ Underwater Vision Benchmark 2017 (UVB 2017)是我们实验室用ZED和Kinect立�
 \subsection{实验设置}
 基准方法我们总共选择了三种，经典无监督跨域图像转译方法CycleGAN~\cite{zhu2017unpaired}，两种最新颖的多域转译模型StarGAN v2~\cite{choi2020stargan}和MDMM~\cite{lee2020drit++}（DRIT++中拓展至多域转译任务Github项目）。其中，跨域转译模型CycleGAN可以学到两个域一对一的映射，在进行多域转译时，需要域两两之间进行训练，无法一次同时实现多个域的训练。
 
-CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循环一致性损失，实现无监督的跨域转译；MDMM依旧使用分解的方式，用一个生成器实现多个域的转译，给定其中两个域的图像和one-hot编码，分解到共享内容空间和域特有风格空间，类似DRIT跨域转译方式进行训练；StarGAN v2是在多域转译模型StarGAN
+CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循环一致性损失，实现无监督的跨域转译；MDMM依旧使用分解的方式，用一个生成器实现多个域的转译，给定其中两个域的图像和one-hot编码，分解到共享内容空间和域特有风格空间，类似DRIT跨域转译方式进行训练；StarGAN v2是在多域转译模型StarGAN基础上的多域多模态转译模型，StarGAN使用一个生成器网络输入源域图像和目标域的域标签，学习将图像从源域转译到目标域，StarGAN v2将域标签替换成域特有风格编码来代表特定域风格的多种样式。所有基准方法的训练代码均来自作者Github提供完成版本。
+
+在我们的实验中，将源域图像转译到$A$、$B$、$C$...等多种水下样式域，在以上三种基准方法上进行了多个数据集的实验。同样地，在真实水下数据集和合成数据集上设置了针对模糊程度、水颜色、以及特定水质状态的多个实验。
 
 \subsection{数据集设置}
 由于水下图像数据限制，在多域转译任务中我们实验同样会用到多个数据集组合。在水下多样式域转译任务中，主要使用RUIE~\cite{liu2019real}，UWCNN~\cite{li2020underwater}，UVB 2017数据集，另外使用EUVP~\cite{islam2019fast}，UIEB~\cite{li2019underwater}作为补充数据集，在实验中填补数据不充分的问题。
@@ -259,30 +261,36 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
 
 
 \section{水下图像多样式域合成结果分析}
+在转译到不同视觉效果水下样式域任务中，CyleGAN无法实现多域之间转译，实现需要两两之间组合训练，我们实验从输入到几个域的样式转译，需要训练几次，保存几个转译模型进行测试；MDMM是基于分解表达的多域转译模型，将图像拆分成共享的内容空间和特有的风格空间，多个域被编码作为条件输入网络结构，控制对应结果的生成；StarGAN v2是多域转译模型StarGAN的最新多模态版本，在完成多域转译任务时，我们将多模态样式设置为1，此时即可完成多域转译任务。在本节中，我们对多个域转译中的水质颜色、浑浊程度、视觉效果多种任务进行了大量实验。
+
 \subsection{定性结果分析}
 \begin{figure*}[htp]
     \centering
-  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \includegraphics[width=0.9\textwidth]{figures/comparison_domain_ruie.pdf}
   \caption{在RUIE数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
-  \label{fig:comparison_ruie_domain}
+  \label{fig:comparison_domain_ruie}
 \end{figure*}
 
-图~\ref{fig:comparison_ruie_domain}展示了不同方法在RUIE数据集上的定性结果对比。左边第一列表示模型输入图像，右边每列代表标注方法对应的结果。从对比图中可以看到，CycleGAN、MDMM、StarGAN v2 我们的方法。
-
+图~\ref{fig:comparison_domain_ruie}展示了不同方法在RUIE数据集上的定性结果对比。左边第一列表示模型输入图像，右边每列代表标注方法对应的结果。域$A$代表蓝绿色具有一定浑浊度的域，域$B$代表蓝色水质域，域$C$代表绿色水质域。CycleGAN转译结果在水质颜色和浑浊度上能接近于真实域内结果，域内内容信息保存完整，域特征学习完全，唯一的缺点在于不能同时实现多个域的转译。MDMM方法转译结果在颜色信息上学习较为完全，但是视觉上全局都会有网格样式，导致生成结果内容不够细腻，真实性较差。StarGAN v2转译后，丢失掉图像中的内容信息，只学到多域的风格信息，预测这是由于输入到多个生成域之间内容差距较大造成的。如图~\ref{fig:ruie_dataset}，输入图像来自EUVP数据集，有明显的内容信息，而转译域是RUIE数据集中多种水质样式域，其中内容不明显。本工作中提出方法的转译结果，每个域都可以看出明显的对应水质样式区别，内容信息可以保存完整，近处内容颜色信息得到保留，真实性较高。
 
 \begin{figure*}[htp]
     \centering
-  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \includegraphics[width=0.9\textwidth]{figures/comparison_domain_uvb.pdf}
   \caption{在UVB 2017数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
-  \label{fig:comparison_uvb_domain}
+  \label{fig:comparison_domain_uvb}
 \end{figure*}
+
+图~\ref{fig:comparison_domain_uvb}展示了不同方法在UVB 2017数据集上的定性结果比较。左边第一列表示模型输入图像，右边每列代表标注方法对应的结果。域$A$，域$B$和域$C$分别为浑浊度不同的三个域，从$A$到$C$浑浊度依次增强。CycleGAN转译结果，浑浊度变化接近真实样本，内容保存完整，颜色信息得到保留，CycleGAN本身的问题就是没法同时生成多个域的结果。MDMM转译结果，浑浊度变化不太明显，在颜色上有轻微变化，但是内容损失较为严重，目标中的内容出现缺损，且有网格状出现。StarGAN v2转译过程中会改变目标域图像的内容，我们相同输入图像转到不同域内时，内容和形状都会发生改变。预测原因是由于UVB 2017数据集中，不同域之间的内容十分相似，用编码控制生成多域结果时不能很好的通过编码只学到域本身的样式内容。本工作中提出方法的转译结果能保留完整的内容信息，且浑浊度也有明显的变化。
 
 \begin{figure*}[htp]
     \centering
-  \includegraphics[width=0.9\textwidth]{figures/comparison_ruie_domain.pdf}
+  \includegraphics[width=\textwidth]{figures/comparison_domain_uwcnn.pdf}
   \caption{在UWCNN数据集上，基准方法和我们提出的方法在多样式转译任务结果比较。}
-  \label{fig:comparison_uwcnn_domain}
+  \label{fig:comparison_domain_uwcnn}
 \end{figure*}
+
+图~\ref{fig:comparison_domain_uwcnn}展示了不同方法在UWCNN数据集上的定性结果比较。左边第一列表示模型输入图像，右边每列代表标注方法对应的结果。域$A$，域$B$，域$C$和域$D$分别表示UWCNN数据集中，近海四种水类型域。通过对比结果我们可以看到，CycleGAN转译结果，内容清晰，仅样式发生改变，非常接近真实数据样本数据。MDMM转译结果，除了会出现网格状样式外，在UWCNN数据集上内容保持完整，样式变化接近真实样本数据。StarGAN v2转译结果，在该数据集上内容损失严重，内容细节被模糊，轮廓扭曲，风格样式学习比较一致。本工作提出方法的转译结果内容保持完整，风格样式变化一致，结果真实性较高。
+
 
 \subsection{定量结果分析}
 真实性定量指标FID结果表格~\ref{tab:ruie_domain_fid}，表格~\ref{tab:uvb_domain_fid}和~\ref{tab:uwcnn_domain_fid}所示。在图像FID质量分析中，我们对比了能完成水下图像多样式域转译的方法CycleGAN、MDMM、StarGAN v2基准方法，在RUIE、UVB 2017、UWCNN数据集上分别进行了测评，测评的基准方法全部来自作者Github给出的完整代码和标准使用方式。通过用FID评价，能够客观的评价各种方法的生成结果。
@@ -301,8 +309,6 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
   \end{tabular}
   \label{tab:ruie_domain_fid}
 \end{table*}
-
-表格~\ref{tab:ruie_domain_fid}中，
 
 \begin{table*}[ht]
 \centering
@@ -335,4 +341,109 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
   \label{tab:uwcnn_domain_fid}
 \end{table*}
 
-\subsection{消融实验}
+表格~\ref{tab:ruie_domain_fid}，表格~\ref{tab:uvb_domain_fid}和~\ref{tab:uwcnn_domain_fid}中可以看出，CycleGAN和本工作中提出的方法在真实性FID的值处于最低，可以取得具有真实性的最佳结果。尽管CycleGAN在真实性上优于其他基准方法，但是其基于循环一致的网络结果限制了它不能一次训练实现多域的转译任务，对于多域转译任务无法完成。
+
+\begin{table}[htp]
+  \centering
+  \caption{RUIE数据集上，UCIQE和UIQM定量指标比较。}
+    \begin{tabular}{c|c|cc}
+    \toprule
+    \multicolumn{2}{c|}{} & \multicolumn{1}{c}{UCIQE} & UIQM \\
+    \midrule
+    \multirow{3}[2]{*}{Real} & Input$\rightarrow$域A & 0.4037$\pm$0.0321 & 2.1390$\pm$0.6176 \\
+                             & Input$\rightarrow$域B & 0.4477$\pm$0.0592 & 3.6913$\pm$0.9274 \\
+                             & Input$\rightarrow$域C & 0.3820$\pm$0.0333 & 2.2831$\pm$0.5473 \\
+    \midrule
+    \multirow{3}[2]{*}{CycleGAN} & Input$\rightarrow$域A & 0.4115$\pm$0.0297& 4.0026$\pm$0.3299 \\
+                                 & Input$\rightarrow$域B & \textbf{0.4475$\pm$0.0606} &4.7208$\pm$0.5163 \\
+                                 & Input$\rightarrow$域C & \textbf{0.3825$\pm$0.0207} &4.0671$\pm$0.2728  \\
+    \midrule
+    \multirow{3}[2]{*}{MDMM} & Input$\rightarrow$域A & 0.3709$\pm$0.0330 & 4.3429$\pm$0.2728 \\
+          & Input$\rightarrow$域B & 0.4335$\pm$0.0439 & 4.7322$\pm$0.2723 \\
+          & Input$\rightarrow$域C & 0.3608$\pm$0.0270 & 4.0594$\pm$0.2134 \\
+    \midrule
+    \multirow{3}[2]{*}{StarGAN v2} &Input$\rightarrow$域A & 0.3553$\pm$0.0058 & 4.2261$\pm$0.2611 \\
+          & Input$\rightarrow$域B & 0.3545$\pm$0.0103 & 4.7629$\pm$0.1706 \\
+          & Input$\rightarrow$域C & 0.3226$\pm$0.0044 & 4.4751$\pm$0.1607 \\
+    \midrule
+    \multirow{3}[2]{*}{Our} & Input$\rightarrow$域A & \textbf{0.3999$\pm$0.0362} & \textbf{3.8744$\pm$0.3965} \\
+          & Input$\rightarrow$域B & 0.4004$\pm$0.0502 & \textbf{4.3901$\pm$0.4917} \\
+          & Input$\rightarrow$域C & 0.3663$\pm$0.0252 & \textbf{4.0515$\pm$0.4076} \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:underwater_matric_ruie}%
+\end{table}%
+
+表格~\ref{tab:underwater_matric_ruie}所示是本工作方法和基准方法在RUIE数据集上的UCIQE和UIQM定量比较结果。表格中可以看出，CycleGAN在$B$域和$C$域转译可以得到最接近真实样本的结果。除此外，本工作中提出的方法在UCIQE和UIQM指标上都可以得到最接近样本的测评结果，说明我们的方法在RUIE数据集上合成结果具有足够的真实性，最接近真实样本分布。
+
+\begin{table}[htp]
+  \centering
+  \caption{UVB 2017数据集上，UCIQE和UIQM定量指标比较。}
+    \begin{tabular}{c|c|cc}
+    \toprule
+    \multicolumn{2}{c|}{} & \multicolumn{1}{c}{UCIQE} & UIQM \\
+    \midrule
+    \multirow{3}[2]{*}{Real} & Input$\rightarrow$域A & 0.4784$\pm$0.0295 & 1.2160$\pm$0.1068 \\
+                             & Input$\rightarrow$域B & 0.4023$\pm$0.0600 & 0.7922$\pm$0.2731 \\
+                             & Input$\rightarrow$域C & 0.3316$\pm$0.0515 & 0.5776$\pm$0.2575 \\
+    \midrule
+    \multirow{3}[2]{*}{CycleGAN} & Input$\rightarrow$域A & \textbf{0.4776$\pm$0.0257} & 4.3455$\pm$0.1228 \\
+                                 & Input$\rightarrow$域B & 0.3740$\pm$0.0354 & 3.4867$\pm$0.3025 \\
+                                 & Input$\rightarrow$域C & 0.3046$\pm$0.0277 & 2.9639$\pm$0.2224  \\
+    \midrule
+    \multirow{3}[2]{*}{MDMM} & Input$\rightarrow$域A & 0.4471$\pm$0.0311 & 4.3429$\pm$0.2728 \\
+          & Input$\rightarrow$域B & 0.3888$\pm$0.0291 & 3.9375$\pm$0.1892 \\
+          & Input$\rightarrow$域C & 0.3733$\pm$0.0317 & 3.8126$\pm$0.2193 \\
+    \midrule
+    \multirow{3}[2]{*}{StarGAN v2} &Input$\rightarrow$域A & 0.4586$\pm$0.0229 & 3.9157$\pm$0.1061 \\
+          & Input$\rightarrow$域B & 0.3769$\pm$0.0576 & 3.2742$\pm$0.2138 \\
+          & Input$\rightarrow$域C & 0.3235$\pm$0.0507 & 2.9694$\pm$0.1863 \\
+    \midrule
+    \multirow{3}[2]{*}{Our} & Input$\rightarrow$域A & 0.4800$\pm$0.0291 & \textbf{4.0562$\pm$0.1403} \\
+          & Input$\rightarrow$域B & \textbf{0.3980$\pm$0.0576} & \textbf{3.1899$\pm$0.3652} \\
+          & Input$\rightarrow$域C & \textbf{0.3258$\pm$0.0436} & \textbf{2.7555$\pm$0.2999} \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:underwater_matric_uvb}%
+\end{table}%
+
+表格~\ref{tab:underwater_matric_uvb}所示是本工作方法和基准方法在UVB 2017数据集上的UCIQE和UIQM定量比较结果。表格中可以看出，CycleGAN在$A$域转译可以得到最接近真实样本的结果。除此外，本工作中提出的方法在UCIQE和UIQM指标上都可以得到最接近样本数据的结果，说明我们的方法在UVB 2017数据集上合成结果具有足够的真实性。
+
+\begin{table}[htp]
+  \centering
+  \caption{UWCNN数据集上，UCIQE和UIQM定量指标比较。}
+    \begin{tabular}{c|c|cc}
+    \toprule
+    \multicolumn{2}{c|}{} & \multicolumn{1}{c}{UCIQE} & UIQM \\
+    \midrule
+    \multirow{3}[2]{*}{Real} & Input$\rightarrow$域A & 0.5150$\pm$0.0629 & 1.8952$\pm$0.6678 \\
+                             & Input$\rightarrow$域B & 0.4553$\pm$0.0499 & 1.5497$\pm$0.6500 \\
+                             & Input$\rightarrow$域C & 0.3812$\pm$0.0369 & 1.2165$\pm$0.6266 \\
+                             & Input$\rightarrow$域D & 0.3609$\pm$0.0274 & 0.8709$\pm$0.5150 \\
+    \midrule
+    \multirow{3}[2]{*}{CycleGAN} & Input$\rightarrow$域A & 0.5494$\pm$0.0444 & 4.5255$\pm$0.4096 \\
+                                 & Input$\rightarrow$域B & \textbf{0.4789$\pm$0.0381} & 4.3994$\pm$0.4449 \\
+                                 & Input$\rightarrow$域C & \textbf{0.4011$\pm$0.0333} & 4.2937$\pm$0.4344 \\
+                                 & Input$\rightarrow$域D & \textbf{0.3676$\pm$0.0189} & 4.2890$\pm$0.36525 \\
+    \midrule
+    \multirow{3}[2]{*}{MDMM} & Input$\rightarrow$域A & 0.6234$\pm$0.0322 & 5.0591$\pm$0.2437 \\
+          & Input$\rightarrow$域B & 0.5244$\pm$0.0359 & 4.8925$\pm$0.29263 \\
+          & Input$\rightarrow$域C & 0.4272$\pm$0.0275 & 4.8056$\pm$0.2918 \\
+          & Input$\rightarrow$域D & 0.4238$\pm$0.0219 & 4.8769$\pm$0.2636 \\
+    \midrule
+    \multirow{3}[2]{*}{StarGAN v2} &Input$\rightarrow$域A & 0.4887$\pm$0.06899 & 4.4896$\pm$0.4803 \\
+          & Input$\rightarrow$域B & 0.4172$\pm$0.0579 & 4.2180$\pm$0.5526 \\
+          & Input$\rightarrow$域C & 0.3184$\pm$±0.0232 & 3.2936$\pm$0.3978 \\
+          & Input$\rightarrow$域D & 0.3272$\pm$0.0135 & 3.3656$\pm$0.3795 \\
+    \midrule
+    \multirow{3}[2]{*}{Our} & Input$\rightarrow$域A & \textbf{0.5063$\pm$0.5063} & \textbf{3.7514$\pm$0.6967} \\
+          & Input$\rightarrow$域B & 0.3674$\pm$0.0469 & \textbf{3.1748$\pm$0.5785} \\
+          & Input$\rightarrow$域C & 0.3432$\pm$0.0362 & \textbf{3.0890$\pm$0.6834} \\
+          & Input$\rightarrow$域D & 0.3361$\pm$0.0278 & \textbf{2.9932$\pm$0.8089} \\
+    \bottomrule
+    \end{tabular}%
+  \label{tab:underwater_matric_uwcnn}%
+\end{table}%
+
+表格~\ref{tab:underwater_matric_uwcnn}所示是本工作方法和基准方法在UWCNN数据集上的UCIQE和UIQM定量比较结果。由表格可以看出，在UCIQE上，CycleGAN在三个域的转译上都可以得到最好的结果，本工作中提出的方法在UCIQE一个域和UIQM指标上都得到最接近真实样本的结果。由此可见，CycleGAN和我们的方法能够在多域转译任务上得到最接近真实的结果，CycleGAN无法同时实现多域转译，在此多域转译任务上，我们的方法可以成功获得足够真实的合成结果。
+% \subsection{消融实验}
