@@ -1,4 +1,4 @@
-\chapter{实验与分析评测}
+\chapter{实验与分析评测}\label{sec:experiment}
 本章将针对水下图像多模态翻译问题设计实验、确定评价指标，验证我们设计的网络模块的有效性，并与基准方法进行对比和分析。
 
 \section{水下图像跨域多模态合成实验设计}
@@ -69,7 +69,6 @@ UWCNN数据集使用NYU-v2 RGB-D图像来合成深海和近海的十种水类型
 UCIQE~\cite{yang2015underwater}和UIQM~\cite{panetta2015human}是无参考/无真值评价水下图像质量的常用指标，也是评价水下图像质量的关键指标。
 
 UCIQE是色彩浓度、饱和度和对比度为测量分量的线性组合，可以定量的评价水下增强结果的色偏、模糊和对比度情况。属于无参考/无真值的水下图像质量评价指标，首先将水下图像从RGB颜色空间转换到CIELab颜色空间，这样更符合人类视觉感知，然后计算各个测量分量，具体计算如式~\ref{equ:uciqe}所示。
-
 \begin{equation}
 \label{equ:uciqe}
 UCIQE = c_1 \times \sigma_c + c_2 \times con_l + c_3 \times \mu_s
@@ -78,7 +77,6 @@ UCIQE = c_1 \times \sigma_c + c_2 \times con_l + c_3 \times \mu_s
 其中，$ \sigma_c$为色度的标准方差，$con_l$为亮度的对比度，$\mu_s$是饱和度的平均值，$c_1$，$c_2$和$c_3$分别为线性组合的权重值。
 
 UIQM针对水下图像的退化机理和成像特点，采用色彩测量UICM，清晰度测量UISM和对比度测量UIConM作为评价水下图像质量的依据。UIQM属于无参考/无真值的图像评价指标，通过测量分量的线性组合来表征图像的视觉质量，如式~\ref{equ:uiqm}所示。
-
 \begin{equation}
 \label{equ:uiqm}
 UIQM = c_1 \times UICM + c_2 \times UISM + c_3 \times UIConM
@@ -242,16 +240,16 @@ UIQM = c_1 \times UICM + c_2 \times UISM + c_3 \times UIConM
 
 表格~\ref{tab:ablation_modal_lcc}所示为生成器有无内容一致性损失$\mathcal{L}_{cc}$的对比结果，在RUIE、UVB 2017和UWCNN数据集上都进行了对比实验。在对比结果中我们可以看到，在有内容一致性损失$\mathcal{L}_{cc}$时，我们的结果在真实性和多样性上都有比较稳定的结果，当没有内容一致性损失$\mathcal{L}_{cc}$时，生成结果中的内容保留不如有内容一致性损失$\mathcal{L}_{cc}$的结果，所以FID较高，真实性不如有内容一致性损失$\mathcal{L}_{cc}$结果的真实性，但是在多样性上，内容一致性损失$\mathcal{L}_{cc}$对最终的结果影响不大，所以LPIPS结果接近。
 
-\section{水下图像多样式域合成实验设计}
+\section{水下图像多种样式域合成实验设计}
 \subsection{实验设置}
-基准方法我们总共选择了三种，经典无监督跨域图像翻译方法CycleGAN~\cite{zhu2017unpaired}，两种最新颖的多域翻译模型StarGAN v2~\cite{choi2020stargan}和MDMM~\cite{lee2020drit++}（DRIT++中拓展至多域翻译任务Github项目）。其中，跨域翻译模型CycleGAN可以学到两个域一对一的映射，在进行多域翻译时，需要域两两之间进行训练，无法一次同时实现多个域的训练。
+基准方法我们总共选择了三种，经典非配对跨域图像翻译方法CycleGAN~\cite{zhu2017unpaired}，两种最新颖的多域翻译模型StarGAN v2~\cite{choi2020stargan}和MDMM~\cite{lee2020drit++}（DRIT++中拓展至多域翻译任务Github项目）。其中，跨域翻译模型CycleGAN可以学到两个域一对一的映射，在进行多域翻译时，需要域两两之间进行训练，无法一次同时实现多个域的训练。
 
-CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循环一致性损失，实现无监督的跨域翻译；MDMM依旧使用分解的方式，用一个生成器实现多个域的翻译，给定其中两个域的图像和one-hot编码，分解到共享内容空间和域特有风格空间，类似DRIT跨域翻译方式进行训练；StarGAN v2是在多域翻译模型StarGAN基础上的多域多模态翻译模型，StarGAN使用一个生成器网络输入源域图像和目标域的域标签，学习将图像从源域翻译到目标域，StarGAN v2将域标签替换成域特有风格编码来代表特定域风格的多种样式。
+CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循环一致性损失，实现非配对的跨域翻译；MDMM依旧使用分解的方式，用一个生成器实现多个域的翻译，给定其中两个域的图像和one-hot编码，分解到共享内容空间和域特有风格空间，类似DRIT跨域翻译方式进行训练；StarGAN v2是在多域翻译模型StarGAN基础上的多域多模态翻译模型，StarGAN使用一个生成器网络输入源域图像和目标域的域标签，学习将图像从源域翻译到目标域，StarGAN v2将域标签替换成域特有风格编码来代表特定域风格的多种样式。
 
 在我们的实验中，将源域图像翻译到$A$、$B$、$C$...等多种水下样式域，在以上三种基准方法上进行了多个数据集的实验。同样地，在真实水下数据集和合成数据集上设置了针对模糊程度、水颜色、以及特定水质状态的多个实验。
 
 \subsection{数据集设置}
-由于水下图像数据限制，在多域翻译任务中我们实验同样会用到多个数据集组合。在水下多样式域翻译任务中，主要使用RUIE~\cite{liu2019real}，UWCNN~\cite{li2020underwater}，UVB 2017数据集，另外使用EUVP~\cite{islam2020fast}，UIEB~\cite{li2019underwater}作为补充数据集，在实验中填补数据不充分的问题。
+由于水下图像数据限制，在多域翻译任务中我们实验同样会用到多个数据集组合。在水下多种样式域翻译任务中，主要使用RUIE~\cite{liu2019real}，UWCNN~\cite{li2020underwater}，UVB 2017数据集，另外使用EUVP~\cite{islam2020fast}，UIEB~\cite{li2019underwater}作为补充数据集，在实验中填补数据不充分的问题。
 
 \begin{figure*}[ht]
     \centering
@@ -260,7 +258,7 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
   \label{fig:ruie_domain}
 \end{figure*}
 
-如图~\ref{fig:ruie_domain}所示，RUIE数据集进行多样式域翻译实验时，选择RUIE的子集UCCS的三种作为水下三个样式域，每种100张，选取EUVP中的100张图像作为空中域。在进行测试实验时，选择EUVP中无水域的100张作为空中域，测试训练模型，以测试模型翻译到水下多个样式域的效果。
+如图~\ref{fig:ruie_domain}所示，RUIE数据集进行多种样式域翻译实验时，选择RUIE的子集UCCS的三种作为水下三个样式域，每种100张，选取EUVP中的100张图像作为空中域。在进行测试实验时，选择EUVP中无水域的100张作为空中域，测试训练模型，以测试模型翻译到水下多个样式域的效果。
 
 \begin{figure*}[ht]
     \centering
@@ -269,7 +267,7 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
   \label{fig:uvb_domain}
 \end{figure*}
 
-如图~\ref{fig:uvb_domain}所示，Underwater Vision Benchmark 2017（UVB 2017）数据集进行多样式域翻译实验时，选择衰减为0中660张图像作为空中域，衰减为1.2、1.58、3.0四种样式明显的作为水下样式域。在进行测试时，选择无水中的30张图像测试模型翻译到多样式域的效果。
+如图~\ref{fig:uvb_domain}所示，Underwater Vision Benchmark 2017（UVB 2017）数据集进行多种样式域翻译实验时，选择衰减为0中660张图像作为空中域，衰减为1.2、1.58、3.0四种样式明显的作为水下样式域。在进行测试时，选择无水中的30张图像测试模型翻译到多种样式域的效果。
 
 \begin{figure*}[ht]
     \centering
@@ -278,18 +276,18 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
   \label{fig:uwcnn_domain}
 \end{figure*}
 
-如图~\ref{tab:uwcnn_comparison}所示，UWCNN数据集进行多样式域翻译实验时，选择室内图像中249张图像作为空中域，近海type-1，type-3，type-5，type-7四种较为明显样式的域作为水下多样式域，每个域选择249张。测试时，选择100张图像进行测试。
+如图~\ref{tab:uwcnn_comparison}所示，UWCNN数据集进行多种样式域翻译实验时，选择室内图像中249张图像作为空中域，近海type-1，type-3，type-5，type-7四种较为明显样式的域作为水下多种样式域，每个域选择249张。测试时，选择100张图像进行测试。
 
 \subsection{评价准则}
 % 和多样性
-为了方便进行质量评价，我们对图像的真实性进行评价。真实性选用Fréchet Inception Distance(FID)来进行评价。FID比较模型生成样本和真实样本统计特性的问题。FID越低，图像质量越好;反之，得分越高，质量越差。较低的FID意味着两个分布之间更接近，也就意味着生成图片的跟真实结果之间相似性较高。在进行多样式域实验中，我们生成的多个域结果与该域真实图像之间计算FID，就可以比较出每个域的生成结果与真实结果之间的相似性。
-% 多样性我们选择Learned Perceptual Image Patch Similarity (LPIPS)来评价。预训练好的AlexNet~\cite{krizhevsky2017imagenet}网络来提取特征后计算$L_1$距离，同一个输入的多个结果对之间计算平均距离，对于测试图像求平均值作为LPIPS结果。在进行多样式域翻译实验中，输入会翻译成多个样式域的结果
+为了方便进行质量评价，我们对图像的真实性进行评价。真实性选用Fréchet Inception Distance(FID)来进行评价。FID比较模型生成样本和真实样本统计特性的问题。FID越低，图像质量越好;反之，得分越高，质量越差。较低的FID意味着两个分布之间更接近，也就意味着生成图片的跟真实结果之间相似性较高。在进行多种样式域实验中，我们生成的多个域结果与该域真实图像之间计算FID，就可以比较出每个域的生成结果与真实结果之间的相似性。
+% 多样性我们选择Learned Perceptual Image Patch Similarity (LPIPS)来评价。预训练好的AlexNet~\cite{krizhevsky2017imagenet}网络来提取特征后计算$L_1$距离，同一个输入的多个结果对之间计算平均距离，对于测试图像求平均值作为LPIPS结果。在进行多种样式域翻译实验中，输入会翻译成多个样式域的结果
 
 另外，还使用水下指标UCIQE和UIQM来验证生成结果的真实性。UCIQE和UIQM都是无参考批评家指标，当生成结果足够真实时，目标域的生成结果和真实样本在这两个指标在色彩、饱和度、对比度上，清晰度等质量上是一致的。通过对比真实样本和合成样本的评价结果，可以看出样本的真实性。
 
 
-\section{水下图像多样式域合成结果分析}
-在翻译到不同视觉效果水下多样式域任务中，CyleGAN无法实现多域之间翻译，实现需要两两之间组合训练，我们实验从输入到几个域的样式翻译，需要训练几次，保存几个翻译模型进行测试；MDMM是基于分解表达的多域翻译模型，将图像分解成共享的内容空间和特有的风格空间，多个域被编码作为条件输入网络结构，控制对应结果的生成；StarGAN v2是多域翻译模型StarGAN的最新多模态版本，在完成多域翻译任务时，我们将多模态样式设置为1，此时即可完成多域翻译任务。在本节中，我们对多个域翻译中的水质颜色、浑浊程度、视觉效果多种任务进行了大量实验。
+\section{水下图像多种样式域合成结果分析}
+在翻译到不同视觉效果水下多种样式域任务中，CyleGAN无法实现多域之间翻译，实现需要两两之间组合训练，我们实验从输入到几个域的样式翻译，需要训练几次，保存几个翻译模型进行测试；MDMM是基于分解表达的多域翻译模型，将图像分解成共享的内容空间和特有的风格空间，多个域被编码作为条件输入网络结构，控制对应结果的生成；StarGAN v2是多域翻译模型StarGAN的最新多模态版本，在完成多域翻译任务时，我们将多模态样式设置为1，此时即可完成多域翻译任务。在本节中，我们对多个域翻译中的水质颜色、浑浊程度、视觉效果多种任务进行了大量实验。
 
 \subsection{定性结果分析}
 \begin{figure}
@@ -321,7 +319,7 @@ CycleGAN可以看成两个GAN的融合，两个网络构成循环过程通过循
 
 
 \subsection{定量结果分析}
-真实性定量指标FID结果如表格~\ref{tab:ruie_domain_fid}，表格~\ref{tab:uvb_domain_fid}和~\ref{tab:uwcnn_domain_fid}所示。在图像FID质量分析中，我们对比了能完成水下图像多样式域翻译的方法CycleGAN、MDMM、StarGAN v2基准方法，在RUIE、UVB 2017、UWCNN数据集上分别进行了测评。通过用FID指标，能够客观的评价各种方法的生成结果。
+真实性定量指标FID结果如表格~\ref{tab:ruie_domain_fid}，表格~\ref{tab:uvb_domain_fid}和~\ref{tab:uwcnn_domain_fid}所示。在图像FID质量分析中，我们对比了能完成水下图像多种样式域翻译的方法CycleGAN、MDMM、StarGAN v2基准方法，在RUIE、UVB 2017、UWCNN数据集上分别进行了测评。通过用FID指标，能够客观的评价各种方法的生成结果。
 
 \begin{table*}[ht]
 \centering
