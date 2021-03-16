@@ -5,7 +5,7 @@
 \subsection{实验设置}
 基准方法我们总共选取了五种，其中两种经典的图像翻译方法CycleGAN~\citep{zhu2017unpaired}和基于分解表示的跨域多模态翻译方法MUNIT~\citep{huang2018multimodal}，三种最新的图像多模态翻译方法DRIT++~\citep{lee2020drit++}、DSMAP~\citep{chang2020domain}和StarGAN v2~\cite{choi2020stargan}。除了不可或缺的经典模型CycleGAN，剩余四种方法都可以完成两个域之间的多模态翻译任务。
 
-CycleGAN学习两个域之间的一对一映射，通过循环一致性损失能够很好的学习到目标域的特征；MUNIT, DRIT++和DSMAP将图像分解为共享的内容空间和不同域的特征空间，然后通过给生成器共享的内容和目标域的特征，合成与目标域风格相同的结果；StarGAN v2使用一个生成器结构，通过编码控制生成具有多个特征的多个目标域。在此，StarGAN v2用两个域之间的翻译来实验。
+CycleGAN学习两个域之间的一对一映射，通过循环一致性损失能够很好的学习到目标域的特征；MUNIT, DRIT++和DSMAP这些基于分解表达的方法，都是将图像进行分解，拆分为域共享的内容空间和不同域的特征空间，然后通过给生成器共享的内容和目标域的特征，合成与目标域风格相同的结果；StarGAN v2使用一个生成器结构，通过编码控制生成具有多个特征的多个目标域。在此，StarGAN v2用两个域之间的翻译来实验。
 
 在我们的实验中，将$A$域设置为空中域，$B$域设置为多模态水下域，在以上五种基准方法上进行多个数据集的客观实验。在真实水下数据集和合成数据集上设置了针对模糊程度、水类型、以及特定水质状态的多个实验。
 
@@ -18,7 +18,7 @@ UIEB~\cite{li2019underwater}是数量大、场景多样且具有高质量参考�
 
 像以上这种水下图像数据相比较于非水下场景（空中）图像数量非常少，进行水下视觉图像研究时，研究人员会按照任务需要将空中图像进行水下环境条件模拟，合成该输入对应环境下的水下图像。
 
-UWCNN~\cite{li2020underwater}论文中提出从地面图像得到相应水下图像数据集。通过NYU-v2~\cite{silberman2012indoor} RGB-D室内数据集生成10种类型的水下图像。NYU-v2室内共1449张图像，其中的1000张用于训练，剩下的449张用于测试，数据集提供的10类水下图像也是共1449张图像。对于每张室内图像，根据生成的随机均匀全球大气光和深度（从0.5米到15米），每张图像生成5张水下图像。NYU-v2室内数据集中的图像作为ground truth（真图），和合成的水下图像（假图）配对。
+UWCNN~\cite{li2020underwater}论文中提出从地面图像得到相应水下图像数据集。通过NYU-v2~\cite{silberman2012indoor} RGB-D室内数据集生成10种类型的水下图像。NYU-v2室内共1449张图像，其中选出1000张用于实验训练，剩下的449张用于测试模型有效性，数据集提供的10类水下图像也是共1449张图像。对于每张室内图像，根据生成的随机均匀全球大气光和深度（从0.5米到15米），每张图像生成5张水下图像。NYU-v2室内数据集中的图像作为ground truth（真图），和合成的水下图像（假图）配对。
 
 EUVP~\cite{islam2020fast}是UGAN~\cite{fabbri2018enhancing}中提出数据集的基础上更加齐全的数据集。UGAN中，ground truth是真实的相对不失真的水下图像（真图），配对的是生成的失真的水下图像（假图）。从ImageNet中选择一些不失真的水下图像，组成X域，共6143张图像，再从ImageNet中选择一些有明显水下图像特点的水下图像，组成Y域，共1817张图像。用CycleGAN实现风格迁移，即将X域中不失真的图像转成Y域中失真水下图像的风格（主要是颜色的变化）。最终用于训练的图像对是将X域中的图像都翻译成失真水下图像。EUVP中，分为paired和unpaired两种。Paired文件夹中包含3个子文件夹：Underwater Dark、Underwater ImageNet和Underwater Scenes，其中Underwater Dark有5550个图像对，570张验证图像，共11670张；Underwater ImageNet有3700个图像对，1270个验证图像，共8670张图像；Underwater Scenes有2185个图像对，130个验证图像，共4500张图像。Unpaired：poor quality中有3195张，good quality中有3140张，validation中有330张，共6665张图像。
 
@@ -59,16 +59,19 @@ UWCNN数据集使用NYU-v2 RGB-D图像来合成深海和近海的十种水类型
 
 \textbf{真实性。}真实性是指给定源域图像作为输入，生成的结果应该与目标域中的分布尽可能的相同。在我们的实验中，生成的水下多模态域结果应该在质量真实性评价上尽可能与真实样本分布相近。
 
-我们在实验中，真实性指标选取Fréchet Inception Distance（FID）~\cite{heusel2017gans}来进行评价。基于Inception score~\cite{salimans2016improved}改进，FID最初由Heusel等人~\cite{heusel2017gans}提出。与Inception分数一样，FID分数也使用了Inception v3模型。具体而言，模型的编码层（图像的分类输出之前的最后池化层）被用来抽取输入图像的特征。使用来自Inception v3模型的激活函数的输出来归纳每个图像，得分即为Frechet Inception Distance。FID能够完善Inception score没有比较模型生成样本和真实样本统计特性的问题。FID 越低，图像质量越好，意味着生成图片跟真实结果之间相似性较高；反之，得分越高，质量越差，两者关系应该是线性的。
+我们在实验中，真实性指标选取Fréchet Inception Distance（FID）~\cite{heusel2017gans}来进行评价。基于Inception score~\cite{salimans2016improved}改进，FID最初由Heusel等人~\cite{heusel2017gans}提出。FID进行评价时，与Inception score一般，使用同样的Inception v3模型进行计算。
+% 与Inception分数一样，FID分数也使用了Inception v3模型。具体而言，模型的编码层（图像的分类输出之前的最后池化层）被用来抽取输入图像的特征。使用来自Inception v3模型的激活函数的输出来归纳每个图像，得分即为Frechet Inception Distance。
+FID能够完善Inception score没有比较模型生成样本和真实样本统计特性的问题。FID越低表示测评的图像质量越好，意味着生成图片跟真实结果之间相似性较高；反之，得分越高表示测评的图像质量越差，图像质量和指标结果呈现线性关系。
 
 \textbf{多样性。}非成对图像多模态翻译问题中，在输入唯一时，能产生目标域的多模态结果。在水下图像多模态翻译任务中，当输入一张空中图像时，我们希望能得到多个对应的水下域图像翻译结果。即使都是相同的内容，在水质等水下条件不同时将导致水下图像的模态不一致。对于生成的多种图像，都能跟输入图像拥有相同的内容，再对生成结果进行多样性的评价。
 
 在实验中，我们选用Learned Perceptual Image Patch Similarity (LPIPS)~\cite{zhang2018perceptual}来评价多样性指标。LPIPS最初由Zhang等人~\cite{zhang2018perceptual}提出，相比于传统的图像相似度评价指标，LPIPS指标得到的结果和人的视觉评价有更高的相关性。LPIPS用来评价生成结果的多样性，用预训练好的AlexNet~\cite{krizhevsky2017imagenet}网络来提取特征后计算L1距离。对于每个测试图像，用指定数量的随机采样向量来成指定数量的输出结果，对于同一个输入的多个结果对之间计算平均距离，最后计算所有测试输入的均值，并把这个数值当作LPIPS结果。
 
 \textbf{水下质量评价。}
-UCIQE~\cite{yang2015underwater}和UIQM~\cite{panetta2015human}是无参考/无真值评价水下图像质量的常用指标，也是评价水下图像质量的关键指标。
+我们选取UCIQE~\cite{yang2015underwater}和UIQM~\cite{panetta2015human}作为我们实验中的水下图像评价指标，这两个指标是水下任务中评价水下图像质量的关键性指标。在进行测评时，不需要配对结果一起参与评价，属于无参考指标。
+% 是无参考/无真值评价水下图像质量的常用指标，也是评价水下图像质量的关键指标。
 
-UCIQE是色彩浓度、饱和度和对比度为测量分量的线性组合，可以定量的评价水下增强结果的色偏、模糊和对比度情况。属于无参考/无真值的水下图像质量评价指标，首先将水下图像从RGB颜色空间转换到CIELab颜色空间，这样更符合人类视觉感知，然后计算各个测量分量，具体计算如式~\ref{equ:uciqe}所示。
+UCIQE是色彩浓度、饱和度和对比度为测量分量的线性组合，可以定量的评价水下增强结果的色偏、模糊和对比度情况。首先将水下图像从RGB颜色空间转换到CIELab颜色空间，这样更符合人类视觉感知，然后计算各个测量分量，具体计算如式~\ref{equ:uciqe}所示。
 \begin{equation}
 \label{equ:uciqe}
 UCIQE = c_1 \times \sigma_c + c_2 \times con_l + c_3 \times \mu_s
@@ -82,7 +85,8 @@ UIQM针对水下图像的退化机理和成像特点，采用色彩测量UICM，
 UIQM = c_1 \times UICM + c_2 \times UISM + c_3 \times UIConM
 \end{equation}
 
-其中，$c_1$，$c_2$和$c_3$分别为线性组合的权重值，权重值的设定需要视具体任务而定，评价水下图像的颜色偏差修正结果时，需设定色度测量分量UICM更大的权重因子；当评价对比度和清晰度时，需要设定清晰度测量分量UISM和对比度测量分量UIConM更大的权重因子。
+其中，$c_1$，$c_2$和$c_3$分别为线性组合的权重值。
+% ，权重值的设定需要视具体任务而定，评价水下图像的颜色偏差修正结果时，需设定色度测量分量UICM更大的权重因子；当评价对比度和清晰度时，需要设定清晰度测量分量UISM和对比度测量分量UIConM更大的权重因子。
 
 \section{水下图像跨域多模态合成结果分析}
 \subsection{定性结果分析}
