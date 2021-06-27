@@ -250,21 +250,22 @@
 \end{center}
 {\normalsize\songti
 
-习近平同志在党的十九大报告中指出：“坚持陆海统筹，加快建设海洋强国。”水下视觉是海洋研究的基础，在建设海洋强国的今天，水下视觉研究具有重要现实意义、战略意义。由于技术和设备的局限性，水下数据采集耗费巨大、成本高昂，海洋环境中获取特定要求的图像数据困难重重;另一方面由于水下光学物理特性，光在水介质中的传播过程存在吸收和散射，会出现色偏、模糊、有雾状效果等多种样式，却很难获取到指定样式的水下数据。但是目前许多水下图像处理任务，都需要大量成对以及配对的多种样式水下数据。随着深度学习的不断发展，生成对抗网络开始越来越多地被应用于水下视觉研究，逐步为水下图像处理提供了简洁、有效、不受物理模型限制、具有泛化性的方法。
+由于技术和设备的局限性，水下数据采集耗费巨大、成本高昂，海洋环境中获取特定要求的图像数据困难重重；另一方面由于水下光学物理特性，光在水介质中的传播过程存在吸收和散射，会出现色偏、模糊、有雾状效果等多种样式，却很难获取到指定样式的水下数据。随着深度学习的不断发展，生成对抗网络开始越来越多地被应用于水下视觉研究，逐步为水下图像处理提供了简洁、有效、不受物理模型限制、具有泛化性的方法。
+% 但是目前许多水下图像处理任务，都需要大量成对以及配对的多种样式水下数据。
 
-基于生成对抗网络的图像翻译方法在目前水下图像翻译中占据重要的地位，通过了解现有基于生成对抗网络的多样式水下图像翻译问题的国内外现状发现当前的方法还存在缺陷，本工作针对水下图像翻译方法无法同时实现多样式的翻译问题进行了研究和解决。本文主要对水下图像的多样式翻译问题进行了深入的探讨，通过对图像翻译工作进行研究，在图像翻译工作的多模态翻译和多域翻译方向开展实验，提出两种不同思路的模型进行解决。本文主要工作如下：
+基于生成对抗网络的图像翻译方法在目前水下图像翻译中占据重要的地位，通过了解现有基于生成对抗网络的多样式水下图像翻译问题的国内外现状发现当前的方法还存在缺陷，本工作针对水下图像翻译方法无法同时实现多样式的翻译问题进行了研究和解决。对水下图像的多样式翻译问题进行了深入的探讨，通过对图像翻译工作进行研究，在图像翻译工作的多模态翻译和多域翻译方向开展实验，提出两种不同思路的模型进行解决。本文主要工作如下：
 
-第一，针对水下图像多样式翻译的问题，我们研究了基于生成对抗网络的图像翻译领域，在充分了解水下图像合成工作后进一步梳理出水下图像多样式翻译可行的两种思路并详尽分析。
+第一，针对水下图像多样式翻译的问题，在充分了解并实验了水下图像合成的工作后进一步梳理出水下图像多样式翻译可行的两种设计并详尽分析。
 
-第二，一种设计思路是基于跨域图像多模态翻译方法，将多个水下样式看作水下域的多个模态进行处理，提出的水下图像跨域多模态翻译模型引入内容一致性损失限制内容在翻译过程中保持完整不损耗，并对该思路进行具体的网络模型结构设计和目标函数设置。
+第二，一种设计是基于跨域图像多模态翻译方法，将多个水下样式看作水下域的多个模态进行处理，提出的水下图像跨域多模态翻译模型引入内容一致性损失限制内容在翻译过程中保持完整不损耗，并对该思路进行具体的网络模型结构设计和目标函数设置。
 
-第三，另一种思路是基于多域翻译的思想进行设计，将包括空中图像在内的各个样式视为多个样式域，把多样式翻译问题建模于多域翻译，通过样式编码控制生成器翻译到各个样式域，并对该设计思路了搭建了具体的网络模型结构和设置了目标函数。
+第三，另一种是基于多域翻译的思想进行设计，将包括空中图像在内的各个样式视为多个样式域，把多样式翻译问题建模于多域翻译，通过样式编码控制生成器翻译到各个样式域，并对该设计思路了搭建了具体的网络模型结构和设置了目标函数。
 
 最后，对于设计的水下图像多样式翻译的两种思路，对比图像翻译问题中最经典和最前沿的方法，在多个合成数据集和真实水下数据集上设计了一系列对比实验和消融实验。对每组实验结果进行了详细的评价和分析，定性视觉结果和定量指标结果都验证了我们提出的网络结构可以有效解决水下图像多样式翻译问题，以及得到比现有其它方法更好的结果。
 }
 \vskip12bp
 {\xiaosi\heiti\noindent
-关键词：生成对抗网络，图像到图像翻译，多模态翻译，多域翻译，水下图像合成}
+关键词：生成对抗网络；图像到图像翻译；多模态翻译；多域翻译；水下图像合成}
 
 \newpage
 
@@ -275,21 +276,21 @@
 \end{center}
 {\normalsize\songti
 
-Jinping Xi pointed out in the report of the 19th National Congress of the Communist Party of China: Adhere to the overall planning of land and sea, and speed up the construction of a maritime power. Underwater vision is the foundation of marine research. In the time of building a maritime power, underwater vision research has important practical and strategic significance. Due to the limitations of technology and equipment, underwater data collection is expensive and costly, and it is difficult to obtain specific required image data in the marine environment. On the other hand, due to the underwater optical and physical characteristics, there is absorption and scattering in the process of light propagation in the water medium. There will be a variety of styles such as color cast, blur, and foggy effects, but it is difficult to obtain underwater data of the specified styles. However, many underwater image processing tasks currently require a large number of pairs of underwater data in multiple styles. With the continuous development of deep learning, Generative Adversarial Networks(GANs) have begun to be increasingly used in underwater vision research, and gradually provide a concise, effective, and generalized method for underwater image processing that is not restricted by physical models.
+Due to the limitations of technology and equipment, underwater data collection is expensive and costly, and it is difficult to obtain specific required image data in the marine environment. And there is absorption and scattering in the process of light propagation in the water medium. There will be a variety of styles such as color cast, blur, and foggy effects, but it is difficult to obtain underwater data of the specified styles. 
 
-The image translation method based on the GANs occupies an important position in the current underwater image synthesis. By understanding the domestic and foreign situation of the existing underwater image multi-style translation based on the generative adversarial network, it is found that the current method still has shortcomings. This work research and solve the problem that underwater image synthesis methods cannot achieve multi-style translation at the same time. The thesis mainly discusses the problem of multi-style synthesis of underwater images. Through the research of image translation, experiments are carried out in the direction of multi-modal translation and multi-domain translation, and two models of different ideas are proposed. The main work of the thesis is as follows:
+The image translation method based on the Generative Adversarial Networks(GANs) occupies an important position in the current underwater image synthesis. This work research and solve the problem that underwater image synthesis methods cannot achieve multi-style translation at the same time. Through the research of image translation, experiments are carried out in the direction of multi-modal translation and multi-domain translation, and two models of different ideas are proposed. The main work of the thesis is as follows:
 
-First, for the problem of underwater image multi-style synthesis, we studied the field of image translation based on GANs. After fully understanding the underwater image synthesis works, we further work out two possible ideas for underwater image multi-style synthesis and analyzed them in detail.
+First, by understanding the underwater image synthesis works, we further work out two possible ideas for underwater image multi-style synthesis and analyzed them in detail.
 
-Second, a design idea is based on a cross-domain image multi-modal translation method, which treats multiple underwater styles as multiple modals in the underwater domain, and the proposed underwater image cross-domain multi-modal translation model is introduced the content-consistency loss as the limitation to remain the content intact and not lost during the translation process, and the corresponding network structure design and the function of objective are carried out later.
+Second, a design is based on a cross-domain image multi-modal translation method, which treats multiple underwater styles as multiple modals in the underwater domain, and the proposed underwater image cross-domain multi-modal translation model is introduced the content-consistency loss as the limitation to remain the content intact and not lost during the translation process.
 
-Third, a design is based on the idea of multi-domain translation, which treats each style including in-air images as multiple style domains, the problem of multi-style is translated to multi-domain translation. The generator translates the input into various style domains,  and it controls the generation through style code. The corresponding network structure and objective are set up for the design idea.
+Third, another design is based on the idea of multi-domain translation, which treats each style including in-air images as multiple style domains, the problem of multi-style is translated to multi-domain translation. The generator translates the input into various style domains,  and it controls the generation through style code.
 
-Finally, for the two ideas of designing underwater image multi-style translation, comparing the most classic and the state-of-the-art methods in the image translation problem, a series of comparative experiments and ablation studies were designed on multiple synthetic and real-world underwater datasets. Both qualitative visual results and quantitative metrics results verify that our proposed network can effectively solve the problem of underwater image multi-style translation and obtain better results than other existing methods.
+Finally, for the two designs of designing underwater image multi-style translation, comparing the most classic and the state-of-the-art methods in the image translation problem, a series of comparative experiments and ablation studies were designed on multiple synthetic and real-world underwater datasets. 
 
 }
  
 \vskip12bp
 {\xiaosi\heiti\noindent 
-\textbf{Keywords: Generative Adversarial Network, Image-to-Image Translation, Multi-Modal Translation, Multi-Domain Translation, Underwater Image Synthesis}}
+\textbf{Keywords: Generative Adversarial Network; Image-to-Image Translation; Multi-Modal Translation; Multi-Domain Translation; Underwater Image Synthesis}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
